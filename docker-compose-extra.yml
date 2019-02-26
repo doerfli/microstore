@@ -1,7 +1,7 @@
 version: '3'
 services:
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.1.0
+    image: confluentinc/cp-enterprise-control-center:5.1.2
     depends_on:
       - zookeeper
       - kafka
@@ -17,10 +17,10 @@ services:
       #- CONTROL_CENTER_CONNECT_CLUSTER=http://kafka-connect:8082 
       
   kong-db:
-    image: postgres:alpine
+    image: postgres:11.2-alpine
     restart: always
   kong:
-    image: kong
+    image: kong:1.0.3-alpine
     depends_on:
       - kong-db
     ports:
