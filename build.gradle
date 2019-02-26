@@ -1,0 +1,23 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+}
+subprojects {
+    buildscript {
+        ext {
+            kotlinVersion = '1.3.21'
+            springBootVersion = '2.1.3.RELEASE'
+        }
+        repositories {
+            mavenCentral()
+        }
+    }
+
+    ext {
+        guavaVersion = '27.0.1-jre'
+        logstashLogbackEncoderVersion = '5.3'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}

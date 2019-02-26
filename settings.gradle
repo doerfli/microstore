@@ -1,0 +1,4 @@
+rootProject.name = 'microstore'
+include 'common'
+include 'api'
+include 'customer'
