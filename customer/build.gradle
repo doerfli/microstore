@@ -20,13 +20,17 @@ sourceCompatibility = '1.8'
 dependencies {
     implementation project(':common')
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}"
 
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    runtimeOnly "redis.clients:jedis:${jedisVersion}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

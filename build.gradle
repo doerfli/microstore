@@ -15,6 +15,7 @@ subprojects {
     ext {
         guavaVersion = '27.0.1-jre'
         logstashLogbackEncoderVersion = '5.3'
+        jedisVersion = '2.10.2'
     }
 
     repositories {

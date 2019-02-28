@@ -12,6 +12,7 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/httpRequests
 
 # Generated files
 .idea/**/contentModel.xml
@@ -86,7 +87,8 @@ fabric.properties
 *.class
 
 # Log file
-*.log
+**/log/*.log
+**/log/*.log.*.gz
 
 # BlueJ files
 *.ctxt
