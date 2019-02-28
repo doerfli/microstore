@@ -25,7 +25,7 @@ class CustomerService @Autowired constructor(
         private val log = getLogger(javaClass)
     }
 
-    fun create(customerEvent: CustomerCreate, correlationId: String): Customer {
+    fun create(customerEvent: CustomerCreate): Customer {
         val customer = Customer(
                 UUID.randomUUID().toString(),
                 customerEvent.email,

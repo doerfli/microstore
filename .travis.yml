@@ -1,10 +1,19 @@
-language: ruby
+matrix:
+  include:
+    - language: java
+      install: true
+      jdk:
+        - openjdk11
+      script:
+        - ./gradlew build
 
-services:
-  - docker
+    - language: ruby
 
-before_install:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      services:
+        - docker
 
-script:
-  - ./build-docker-images.sh
+      before_install:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      script:
+        - ./build-docker-images.sh

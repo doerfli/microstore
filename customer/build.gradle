@@ -33,6 +33,9 @@ dependencies {
     runtimeOnly "redis.clients:jedis:${jedisVersion}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.junit.jupiter:junit-jupiter-api'
+
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 compileKotlin {

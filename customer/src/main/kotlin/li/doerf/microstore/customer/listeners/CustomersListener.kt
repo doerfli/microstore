@@ -51,7 +51,7 @@ class CustomersListener @Autowired constructor(
 
     private fun applyEventToStore(event: Any?, correlationId: String): Any? {
         when(event) {
-            is CustomerCreate -> return customerService.create(event, correlationId)
+            is CustomerCreate -> return customerService.create(event)
         }
         return null
     }
