@@ -1,7 +1,6 @@
-package li.doerf.microstore.customer.listeners
+package li.doerf.microstore.customer.services
 
 import li.doerf.microstore.customer.repositories.CustomerRepository
-import li.doerf.microstore.customer.services.CustomerService
 import li.doerf.microstore.dto.CustomerCreate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
