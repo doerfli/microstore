@@ -24,19 +24,19 @@ class CustomersListener {
 
     @KafkaListener(topics = [TOPIC_CUSTOMERS])
     @Transactional
-    fun receive(record: ConsumerRecord<Any, Any>) {
+    fun receive(record: ConsumerRecord<String, Any>) {
         log.debug("received: $record")
         val correlationId =
                 String(record.headers().headers(KafkaHeaders.CORRELATION_ID).first().value())
         val event = record.value() as? CustomerCreated ?: return
         results[correlationId] = event
-        val future = waitingLatches.remove(correlationId)
-        if (future == null) {
+        val latch = waitingLatches.remove(correlationId)
+        if (latch == null) {
             log.error("unknown correlation id: $correlationId")
             return
         }
         log.debug("countdown latch")
-        future.countDown()
+        latch.countDown()
     }
 
     fun registerCorrelationIdForResponse(correlationId: String): CompletableFuture<CustomerCreated> {

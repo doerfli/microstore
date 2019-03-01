@@ -17,10 +17,7 @@ import org.springframework.kafka.support.KafkaHeaders
 import java.util.*
 
 
-//@EmbeddedKafka(partitions = 10,
-//        topics = [TOPIC_CUSTOMERS])
 @ExtendWith(MockitoExtension::class)
-//@ContextConfiguration(classes=[KafkaService::class])
 class CustomersListenerTest {
 
     private fun <T> any(): T {
@@ -28,18 +25,12 @@ class CustomersListenerTest {
         return uninitialized()
     }
 
-//    @Configuration
-//    @ComponentScan("li.doerf.microstore")
-//    class SpringConfig
-
     private fun <T> uninitialized(): T = null as T
 
     @Mock
     private lateinit var customerService: CustomerService
     @Mock
     private lateinit var kafkaService: KafkaService
-//@MockBean
-//private lateinit var kafkaService: KafkaService
 
     @InjectMocks
     private lateinit var customersListener: CustomersListener
