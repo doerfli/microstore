@@ -51,3 +51,8 @@ compileTestKotlin {
     }
 }
 
+test {
+    useJUnitPlatform {
+
+    }
+}
