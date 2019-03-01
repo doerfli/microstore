@@ -32,7 +32,7 @@ class CustomersListener @Autowired constructor(
 
     @KafkaListener(topics = [TOPIC_CUSTOMERS])
     @Transactional
-    fun receive(record: ConsumerRecord<Any, Any>) {
+    fun receive(record: ConsumerRecord<String, Any>) {
         log.debug("received: $record")
         val correlationId =
                 String(record.headers().headers(KafkaHeaders.CORRELATION_ID).first().value())

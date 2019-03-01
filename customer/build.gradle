@@ -33,6 +33,8 @@ dependencies {
     runtimeOnly "redis.clients:jedis:${jedisVersion}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
     testCompile 'org.junit.jupiter:junit-jupiter-api'
 
     testRuntime 'org.junit.jupiter:junit-jupiter-engine'
