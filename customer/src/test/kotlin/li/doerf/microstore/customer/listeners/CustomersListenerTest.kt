@@ -4,6 +4,7 @@ import li.doerf.microstore.TOPIC_CUSTOMERS
 import li.doerf.microstore.customer.services.CustomerService
 import li.doerf.microstore.dto.CustomerCreate
 import li.doerf.microstore.entities.Customer
+import li.doerf.microstore.services.KafkaService
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
 import org.junit.jupiter.api.Test
@@ -19,6 +20,7 @@ import java.util.*
 //@EmbeddedKafka(partitions = 10,
 //        topics = [TOPIC_CUSTOMERS])
 @ExtendWith(MockitoExtension::class)
+//@ContextConfiguration(classes=[KafkaService::class])
 class CustomersListenerTest {
 
     private fun <T> any(): T {
@@ -26,10 +28,18 @@ class CustomersListenerTest {
         return uninitialized()
     }
 
+//    @Configuration
+//    @ComponentScan("li.doerf.microstore")
+//    class SpringConfig
+
     private fun <T> uninitialized(): T = null as T
 
     @Mock
     private lateinit var customerService: CustomerService
+    @Mock
+    private lateinit var kafkaService: KafkaService
+//@MockBean
+//private lateinit var kafkaService: KafkaService
 
     @InjectMocks
     private lateinit var customersListener: CustomersListener
@@ -45,7 +55,7 @@ class CustomersListenerTest {
         customersListener.receive(record)
 
         Mockito.verify(customerService).create(any())
-        Mockito.verify(customerService).sendEvent(any(), any())
+        Mockito.verify(kafkaService).sendEvent(any(), any())
     }
 
     @Test
@@ -64,7 +74,7 @@ class CustomersListenerTest {
         customersListener.receive(record)
 
         Mockito.verify(customerService).create(any())
-        Mockito.verify(customerService, Mockito.never()).sendEvent(any(), any())
+        Mockito.verify(kafkaService, Mockito.never()).sendEvent(any(), any())
     }
 
 }

@@ -6,6 +6,7 @@ import li.doerf.microstore.dto.CustomerCreate
 import li.doerf.microstore.dto.CustomerCreated
 import li.doerf.microstore.entities.Customer
 import li.doerf.microstore.listeners.ReplayingRecordsListener
+import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class CustomersListener @Autowired constructor(
-        val customerService: CustomerService
+        val customerService: CustomerService,
+        val kafkaService: KafkaService
 ) : ReplayingRecordsListener() {
 
     companion object {
@@ -50,7 +52,7 @@ class CustomersListener @Autowired constructor(
         when(event) {
             is CustomerCreate -> {
                 val customer = eventResponse as Customer
-                customerService.sendEvent(
+                kafkaService.sendEvent(
                         CustomerCreated(
                                 customer.id,
                                 customer.email,
