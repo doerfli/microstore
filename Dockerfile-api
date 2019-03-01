@@ -6,7 +6,6 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 COPY common common
-COPY commonTest commonTest
 COPY api api
 
 RUN ./gradlew -Dorg.gradle.daemon=false :api:assemble
