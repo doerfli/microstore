@@ -10,6 +10,7 @@ import li.doerf.microstore.utils.getLogger
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.util.concurrent.ListenableFutureCallback
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -46,15 +48,7 @@ class CustomerController @Autowired constructor(
         return customersListener
                 .registerCorrelationIdForResponse(correlationId)
                 .thenApply { x -> processResponse(x)}
-                .exceptionally { processResponse(
-                        // TODO return http status
-                        CustomerCreated(
-                                "null",
-                                "null",
-                                "null",
-                                "null"
-                        )
-                ) }
+                .exceptionally { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) }
 
     }
 
