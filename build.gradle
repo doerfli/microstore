@@ -16,6 +16,8 @@ subprojects {
         guavaVersion = '27.0.1-jre'
         logstashLogbackEncoderVersion = '5.3'
         jedisVersion = '2.10.2'
+        junitVersion = '5.3.2'
+        mockitoVersion = '2.23.4'
     }
 
     repositories {
