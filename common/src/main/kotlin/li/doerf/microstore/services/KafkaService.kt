@@ -1,6 +1,5 @@
 package li.doerf.microstore.services
 
-import li.doerf.microstore.TOPIC_CUSTOMERS
 import li.doerf.microstore.utils.getLogger
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeader
@@ -17,19 +16,19 @@ open class KafkaService @Autowired constructor(private val kafkaTemplate: KafkaT
         private val log = getLogger(javaClass)
     }
 
-    open fun sendEvent(event: Any, correlationId: String) {
-        log.debug("sending event $event")
-        val record = ProducerRecord<String, Any>(TOPIC_CUSTOMERS, event)
+    open fun sendEvent(topic: String, event: Any, correlationId: String) {
+        log.debug("sending event $event to topic $topic")
+        val record = ProducerRecord<String, Any>(topic, event)
         record.headers().add(RecordHeader(KafkaHeaders.CORRELATION_ID, correlationId.toByteArray()))
 
         val sendFuture = kafkaTemplate.send(record)
         sendFuture.addCallback(object: ListenableFutureCallback<Any> {
             override fun onSuccess(result: Any?) {
-                log.debug("onSuccess")
+                log.debug("$topic -> onSuccess")
             }
 
             override fun onFailure(ex: Throwable) {
-                log.error("onFailure", ex)
+                log.error("topic -> onFailure", ex)
             }
         })
     }

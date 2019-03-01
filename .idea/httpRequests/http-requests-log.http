@@ -1,0 +1,78 @@
+POST http://127.0.0.1:8080/customers
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+<> 2019-03-01T101237.200.json
+
+###
+
+POST http://127.0.0.1:8080/customers
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+<> 2019-03-01T094316.200.json
+
+###
+
+POST http://127.0.0.1:8080/customers
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+<> 2019-03-01T094307.200.json
+
+###
+
+POST http://127.0.0.1:8080/customers
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+<> 2019-03-01T093802.200.json
+
+###
+
+POST http://127.0.0.1:8080/customers
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+<> 2019-03-01T093522.200.json
+
+###
+
+POST http://127.0.0.1:8080/customers
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+<> 2019-03-01T093459.200.json
+
+###
+

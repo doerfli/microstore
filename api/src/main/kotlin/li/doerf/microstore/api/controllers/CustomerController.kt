@@ -6,14 +6,10 @@ import li.doerf.microstore.api.rest.dto.CreateCustomerRequest
 import li.doerf.microstore.api.rest.dto.CreateCustomerResponse
 import li.doerf.microstore.dto.CustomerCreate
 import li.doerf.microstore.dto.CustomerCreated
+import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
-import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.header.internals.RecordHeader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.support.KafkaHeaders
-import org.springframework.util.concurrent.ListenableFutureCallback
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,7 +21,7 @@ import java.util.concurrent.CompletableFuture
 @RestController
 @RequestMapping("/customers")
 class CustomerController @Autowired constructor(
-        private val kafkaTemplate: KafkaTemplate<String, Any>,
+        private val kafkaService: KafkaService,
         private val customersListener: CustomersListener
 ) {
 
@@ -40,7 +36,7 @@ class CustomerController @Autowired constructor(
         val event = createCreateCustomerEvent(customer)
         val correlationId = UUID.randomUUID().toString()
         val future = registerCorrelationIdForResponse(correlationId)
-        sendEvent(event, correlationId)
+        kafkaService.sendEvent(TOPIC_CUSTOMERS, event, correlationId)
         return future
     }
 
@@ -59,22 +55,6 @@ class CustomerController @Autowired constructor(
                 event.firstname,
                 event.lastname
         )
-    }
-
-    private fun sendEvent(event: CustomerCreate, correlationId: String) {
-        val record = ProducerRecord<String, Any>(TOPIC_CUSTOMERS, event)
-        record.headers().add(RecordHeader(KafkaHeaders.CORRELATION_ID, correlationId.toByteArray()))
-
-        val sendFuture = kafkaTemplate.send(record)
-        sendFuture.addCallback(object: ListenableFutureCallback<Any> {
-            override fun onSuccess(result: Any?) {
-                log.debug("onSuccess")
-            }
-
-            override fun onFailure(ex: Throwable) {
-                log.error("onFailure", ex)
-            }
-        })
     }
 
     private fun createCreateCustomerEvent(customer: CreateCustomerRequest): CustomerCreate {

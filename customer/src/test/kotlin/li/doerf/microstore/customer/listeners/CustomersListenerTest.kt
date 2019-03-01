@@ -55,7 +55,7 @@ class CustomersListenerTest {
         customersListener.receive(record)
 
         Mockito.verify(customerService).create(any())
-        Mockito.verify(kafkaService).sendEvent(any(), any())
+        Mockito.verify(kafkaService).sendEvent(any(), any(), any())
     }
 
     @Test
@@ -74,7 +74,7 @@ class CustomersListenerTest {
         customersListener.receive(record)
 
         Mockito.verify(customerService).create(any())
-        Mockito.verify(kafkaService, Mockito.never()).sendEvent(any(), any())
+        Mockito.verify(kafkaService, Mockito.never()).sendEvent(any(), any(), any())
     }
 
 }

@@ -53,6 +53,7 @@ class CustomersListener @Autowired constructor(
             is CustomerCreate -> {
                 val customer = eventResponse as Customer
                 kafkaService.sendEvent(
+                        TOPIC_CUSTOMERS,
                         CustomerCreated(
                                 customer.id,
                                 customer.email,
