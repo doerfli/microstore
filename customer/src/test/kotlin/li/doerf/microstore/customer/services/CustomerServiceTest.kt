@@ -1,14 +1,20 @@
 package li.doerf.microstore.customer.services
 
+import li.doerf.microstore.TOPIC_CUSTOMERS
 import li.doerf.microstore.customer.repositories.CustomerRepository
 import li.doerf.microstore.dto.CustomerCreate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.kafka.test.context.EmbeddedKafka
+import org.springframework.test.context.TestPropertySource
 
-//@SpringJUnitConfig
 @SpringBootTest
+@EmbeddedKafka(
+        topics = [TOPIC_CUSTOMERS],
+        partitions = 10)
+@TestPropertySource(properties = ["spring.kafka.bootstrap-servers=\${spring.embedded.kafka.brokers}"])
 class CustomerServiceTest @Autowired constructor(
         val customerService: CustomerService,
         val customerRepository: CustomerRepository
