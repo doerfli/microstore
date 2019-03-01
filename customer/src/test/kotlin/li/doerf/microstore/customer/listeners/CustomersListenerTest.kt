@@ -5,6 +5,7 @@ import li.doerf.microstore.customer.services.CustomerService
 import li.doerf.microstore.dto.CustomerCreate
 import li.doerf.microstore.entities.Customer
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.common.TopicPartition
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -45,6 +46,25 @@ class CustomersListenerTest {
 
         Mockito.verify(customerService).create(any())
         Mockito.verify(customerService).sendEvent(any(), any())
+    }
+
+    @Test
+    fun testReceiveReplaying() {
+        val cust = CustomerCreate("some@body.com", "Some", "Body")
+        val record = ConsumerRecord(TOPIC_CUSTOMERS, 0, 0, UUID.randomUUID().toString(), cust as Any)
+        record.headers().add(KafkaHeaders.CORRELATION_ID, UUID.randomUUID().toString().toByteArray())
+
+        Mockito.`when`(customerService.create(any())).thenReturn(Customer(UUID.randomUUID().toString(), cust.email, cust.firstname, cust.lastname))
+
+        val assignments = mutableMapOf<TopicPartition, Long>()
+        val tp = TopicPartition(TOPIC_CUSTOMERS, 0)
+        assignments[tp] = 1L
+        customersListener.onPartitionsAssigned(assignments, null)
+
+        customersListener.receive(record)
+
+        Mockito.verify(customerService).create(any())
+        Mockito.verify(customerService, Mockito.never()).sendEvent(any(), any())
     }
 
 }
