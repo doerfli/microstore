@@ -32,10 +32,12 @@ dependencies {
 
     runtimeOnly "redis.clients:jedis:${jedisVersion}"
 
+    implementation project(':commonTest')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 
     testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
 }

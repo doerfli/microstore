@@ -2,6 +2,7 @@ package li.doerf.microstore.api.listeners
 
 import li.doerf.microstore.TOPIC_CUSTOMERS
 import li.doerf.microstore.dto.CustomerCreated
+import li.doerf.microstore.test.BaseTestWithKafka
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,7 +14,8 @@ import java.util.*
 @SpringBootTest
 class CustomersListenerTest @Autowired constructor(
         private val customersListener: CustomersListener
-){
+) : BaseTestWithKafka()
+{
 
 //    private fun <T> any(): T {
 //        Mockito.any<T>()
