@@ -3,7 +3,6 @@ package li.doerf.microstore.api.controllers
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.jackson.responseObject
 import li.doerf.microstore.TOPIC_CUSTOMERS
-import li.doerf.microstore.api.MicrostoreConfig
 import li.doerf.microstore.api.listeners.CustomersListener
 import li.doerf.microstore.api.rest.dto.CreateCustomerRequest
 import li.doerf.microstore.api.rest.dto.CreateCustomerResponse
@@ -24,7 +23,8 @@ import java.util.concurrent.CompletableFuture
 class CustomerController @Autowired constructor(
         private val kafkaService: KafkaService,
         private val customersListener: CustomersListener,
-        private val microstoreConfig: MicrostoreConfig
+        private val customerSvcBaseUrl: String,
+        private val fuel: Fuel
 ) {
 
     companion object {
@@ -70,7 +70,7 @@ class CustomerController @Autowired constructor(
     @GetMapping
     fun get(): List<Customer> {
         log.debug("received request to get all customers")
-        val response = Fuel.get("http://${microstoreConfig.customerSvcHostname}:${microstoreConfig.customerSvcPort}/customers")
+        val response = fuel.get("$customerSvcBaseUrl/customers")
                 .responseObject<List<Customer>>()
         log.debug("returning response")
         return response.third.get()

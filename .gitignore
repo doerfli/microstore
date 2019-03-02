@@ -66,6 +66,7 @@ crashlytics-build.properties
 fabric.properties
 
 # Editor-based Rest Client
+.idea/httpRequests
 .idea/httpRequests/
 
 # Android studio 3.1+ serialized cache file
@@ -88,6 +89,7 @@ fabric.properties
 
 # Log file
 **/log/*.log
+**/log/*.log.*.tmp
 **/log/*.log.*.gz
 
 # BlueJ files
