@@ -14,8 +14,8 @@ services:
     depends_on:
       - customer-redis
     environment:
-      - REDISHOST=customer-redis
-      - REDISPORT=6379
+      - MICROSTORE_REDISHOST=customer-redis
+      - MICROSTORE_REDISPORT=6379
     volumes:
       - customer-svc-logs:/log
   api-svc:
