@@ -1,19 +1,20 @@
 package li.doerf.microstore.api.controllers
 
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.jackson.responseObject
 import li.doerf.microstore.TOPIC_CUSTOMERS
+import li.doerf.microstore.api.MicrostoreConfig
 import li.doerf.microstore.api.listeners.CustomersListener
 import li.doerf.microstore.api.rest.dto.CreateCustomerRequest
 import li.doerf.microstore.api.rest.dto.CreateCustomerResponse
 import li.doerf.microstore.dto.CustomerCreate
 import li.doerf.microstore.dto.CustomerCreated
+import li.doerf.microstore.entities.Customer
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -22,7 +23,8 @@ import java.util.concurrent.CompletableFuture
 @RequestMapping("/customers")
 class CustomerController @Autowired constructor(
         private val kafkaService: KafkaService,
-        private val customersListener: CustomersListener
+        private val customersListener: CustomersListener,
+        private val microstoreConfig: MicrostoreConfig
 ) {
 
     companion object {
@@ -63,6 +65,15 @@ class CustomerController @Autowired constructor(
                 customer.firstname,
                 customer.lastname
         )
+    }
+
+    @GetMapping
+    fun get(): List<Customer> {
+        log.debug("received request to get all customers")
+        val response = Fuel.get("http://${microstoreConfig.customerSvcHostname}:${microstoreConfig.customerSvcPort}/customers")
+                .responseObject<List<Customer>>()
+        log.debug("returning response")
+        return response.third.get()
     }
 
 }
