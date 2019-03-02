@@ -28,6 +28,8 @@ services:
       - customer-svc
     ports:
       - 8080:8080
+    environment:
+      - MICROSTORE_CUSTOMER_HOSTNAME=customer-svc
     volumes:
       - api-svc-logs:/log
   
