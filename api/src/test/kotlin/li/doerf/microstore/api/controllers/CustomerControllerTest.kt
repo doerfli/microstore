@@ -1,5 +1,6 @@
 package li.doerf.microstore.api.controllers
 
+import com.github.kittinunf.fuel.Fuel
 import li.doerf.microstore.api.listeners.CustomersListener
 import li.doerf.microstore.api.rest.dto.CreateCustomerRequest
 import li.doerf.microstore.dto.CustomerCreated
@@ -29,6 +30,8 @@ class CustomerControllerTest {
     private lateinit var kafkaService: KafkaService
     @Mock
     private lateinit var customersListener: CustomersListener
+    @Mock
+    private lateinit var fuel: Fuel
 
     @Test
     fun testCreate() {
@@ -46,7 +49,7 @@ class CustomerControllerTest {
         )
         val future = CompletableFuture.supplyAsync<CustomerCreated>{cc}
         Mockito.`when`(customersListener.registerCorrelationIdForResponse(any())).thenReturn(future)
-        val customerController = CustomerController(kafkaService, customersListener)
+        val customerController = CustomerController(kafkaService, customersListener, "http://localhost", fuel)
 
         val res = customerController.create(req)
         val resp = res.join()
@@ -73,7 +76,7 @@ class CustomerControllerTest {
         )
         val future = CompletableFuture.supplyAsync<CustomerCreated>{throw IllegalArgumentException("something happened")}
         Mockito.`when`(customersListener.registerCorrelationIdForResponse(any())).thenReturn(future)
-        val customerController = CustomerController(kafkaService, customersListener)
+        val customerController = CustomerController(kafkaService, customersListener, "http://localhost", fuel)
 
         try {
             val res = customerController.create(req)
