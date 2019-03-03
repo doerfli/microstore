@@ -36,7 +36,7 @@ class CustomersListener @Autowired constructor(
         when(event) {
             is CustomerCreate -> {
                 val cid = UUID.randomUUID().toString()
-                kafkaService.sendEventWithKey(
+                kafkaService.sendEvent(
                         TOPIC_CUSTOMERS,
                         cid,
                         CustomerCreated(

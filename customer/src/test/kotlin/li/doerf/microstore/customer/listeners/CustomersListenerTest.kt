@@ -60,7 +60,7 @@ class CustomersListenerTest {
         argumentString.capture()
         argumentEvent.capture()
         argumentString.capture()
-        verificator.sendEventWithKey(uninitialized(), uninitialized(), uninitialized(), uninitialized())
+        verificator.sendEvent(uninitialized(), uninitialized(), uninitialized(), uninitialized())
 
         assertThat(argumentString.allValues[0]).isEqualTo(TOPIC_CUSTOMERS)
         assertThat(argumentString.allValues[1]).isEqualTo(argumentEvent.value.id)
@@ -79,7 +79,7 @@ class CustomersListenerTest {
 
         customersListener.receive(record)
 
-        Mockito.verify(kafkaService, Mockito.never()).sendEventWithKey(any(), any(), any(), any())
+        Mockito.verify(kafkaService, Mockito.never()).sendEvent(any(), any(), any(), any())
     }
 
     @Test

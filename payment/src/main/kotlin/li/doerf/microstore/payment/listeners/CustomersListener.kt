@@ -42,7 +42,7 @@ class CustomersListener @Autowired constructor(
                         event.id,
                         BigDecimal(1000)
                 )
-                kafkaService.sendEventWithKey(TOPIC_CUSTOMERS, event.id, n, correlationId)
+                kafkaService.sendEvent(TOPIC_CUSTOMERS, event.id, n, correlationId)
             }
         }
     }

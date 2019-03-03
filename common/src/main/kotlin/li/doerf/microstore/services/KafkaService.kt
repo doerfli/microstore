@@ -33,7 +33,7 @@ open class KafkaService @Autowired constructor(private val kafkaTemplate: KafkaT
         })
     }
 
-    open fun sendEventWithKey(topic: String, key: String, event: Any, correlationId: String) {
+    open fun sendEvent(topic: String, key: String, event: Any, correlationId: String) {
         log.debug("sending event $event to topic $topic")
         val record = ProducerRecord<String, Any>(topic, key, event)
         record.headers().add(RecordHeader(KafkaHeaders.CORRELATION_ID, correlationId.toByteArray()))
