@@ -1,7 +1,6 @@
 package li.doerf.microstore.customer.listeners
 
 import li.doerf.microstore.TOPIC_CUSTOMERS
-import li.doerf.microstore.customer.entities.Customer
 import li.doerf.microstore.customer.services.CustomerService
 import li.doerf.microstore.dto.kafka.CustomerCreate
 import li.doerf.microstore.dto.kafka.CustomerCreated
@@ -11,6 +10,7 @@ import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import java.util.*
 
 @KafkaListener(topics = [TOPIC_CUSTOMERS])
 @Component
@@ -26,23 +26,24 @@ class CustomersListener @Autowired constructor(
 
     override fun applyEventToStore(event: Any?, correlationId: String): Any? {
         when(event) {
-            is CustomerCreate -> return customerService.create(event)
+            is CustomerCreated -> return customerService.store(event)
         }
         return null
     }
 
-    override fun processCommand(event: Any, correlationId: String, eventResponse: Any?) {
-        log.debug("processCommand")
+    override fun handleBusinessLogic(event: Any, correlationId: String, eventResponse: Any?) {
+        log.debug("handleBusinessLogic")
         when(event) {
             is CustomerCreate -> {
-                val customer = eventResponse as Customer
-                kafkaService.sendEvent(
+                val cid = UUID.randomUUID().toString()
+                kafkaService.sendEventWithKey(
                         TOPIC_CUSTOMERS,
+                        cid,
                         CustomerCreated(
-                                customer.id,
-                                customer.email,
-                                customer.firstname,
-                                customer.lastname
+                                cid,
+                                event.email,
+                                event.firstname,
+                                event.lastname
                         ),
                         correlationId)
             }

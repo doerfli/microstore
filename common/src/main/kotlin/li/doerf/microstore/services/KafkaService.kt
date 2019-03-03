@@ -32,4 +32,21 @@ open class KafkaService @Autowired constructor(private val kafkaTemplate: KafkaT
             }
         })
     }
+
+    open fun sendEventWithKey(topic: String, key: String, event: Any, correlationId: String) {
+        log.debug("sending event $event to topic $topic")
+        val record = ProducerRecord<String, Any>(topic, key, event)
+        record.headers().add(RecordHeader(KafkaHeaders.CORRELATION_ID, correlationId.toByteArray()))
+
+        val sendFuture = kafkaTemplate.send(record)
+        sendFuture.addCallback(object: ListenableFutureCallback<Any> {
+            override fun onSuccess(result: Any?) {
+                log.debug("$topic -> onSuccess")
+            }
+
+            override fun onFailure(ex: Throwable) {
+                log.error("topic -> onFailure", ex)
+            }
+        })
+    }
 }

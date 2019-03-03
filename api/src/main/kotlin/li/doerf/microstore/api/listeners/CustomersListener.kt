@@ -42,7 +42,7 @@ class CustomersListener {
     fun registerCorrelationIdForResponse(correlationId: String): CompletableFuture<CustomerCreated> {
         return CompletableFuture.supplyAsync<CustomerCreated> {
             val latch = CountDownLatch(1)
-            waitingLatches.put(correlationId, latch)
+            waitingLatches[correlationId] = latch
             latch.await()
             results.getOrDefault(correlationId, null)
         }

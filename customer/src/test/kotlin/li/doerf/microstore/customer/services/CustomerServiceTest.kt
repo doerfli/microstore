@@ -1,13 +1,16 @@
 package li.doerf.microstore.customer.services
 
+import li.doerf.microstore.customer.entities.Customer
 import li.doerf.microstore.customer.repositories.CustomerRepository
-import li.doerf.microstore.dto.kafka.CustomerCreate
+import li.doerf.microstore.dto.kafka.CustomerCreated
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class CustomerServiceTest {
@@ -16,22 +19,25 @@ class CustomerServiceTest {
     private lateinit var customerRepository: CustomerRepository
 
     @Test
-    fun testCreate() {
-        val customerToCreate = CustomerCreate(
-                "some@body.com",
+    fun testStore() {
+        val uuid = UUID.randomUUID().toString()
+        val cc = CustomerCreated(
+                uuid,
+                "some@buddy.com",
                 "Some",
-                "Body"
+                "Buddy"
         )
 
-        val customerService = CustomerService(customerRepository)
+        val service = CustomerService(customerRepository)
+        service.store(cc)
 
-        val cust = customerService.create(customerToCreate)
-        assertThat(cust.id).isNotNull()
-        assertThat(cust.email).isEqualTo(customerToCreate.email)
-        assertThat(cust.firstname).isEqualTo(customerToCreate.firstname)
-        assertThat(cust.lastname).isEqualTo(customerToCreate.lastname)
+        val argument = ArgumentCaptor.forClass(Customer::class.java)
+        Mockito.verify(customerRepository).save(argument.capture())
 
-        Mockito.verify(customerRepository).save(Mockito.any())
+        assertThat(argument.value.id).isEqualTo(uuid)
+        assertThat(argument.value.email).isEqualTo(cc.email)
+        assertThat(argument.value.firstname).isEqualTo(cc.firstname)
+        assertThat(argument.value.lastname).isEqualTo(cc.lastname)
     }
 
 }

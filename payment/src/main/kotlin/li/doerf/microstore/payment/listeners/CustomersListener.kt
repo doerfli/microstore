@@ -34,15 +34,15 @@ class CustomersListener @Autowired constructor(
         return null
     }
 
-    override fun processCommand(event: Any, correlationId: String, eventResponse: Any?) {
-        log.debug("processCommand")
+    override fun handleBusinessLogic(event: Any, correlationId: String, eventResponse: Any?) {
+        log.debug("handleBusinessLogic")
         when(event) {
             is CustomerCreated -> {
                 val n = CustomerIncreaseLimit(
                         event.id,
                         BigDecimal(1000)
                 )
-                kafkaService.sendEvent(TOPIC_CUSTOMERS, n, correlationId)
+                kafkaService.sendEventWithKey(TOPIC_CUSTOMERS, event.id, n, correlationId)
             }
         }
     }

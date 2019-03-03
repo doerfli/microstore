@@ -2,11 +2,10 @@ package li.doerf.microstore.customer.services
 
 import li.doerf.microstore.customer.entities.Customer
 import li.doerf.microstore.customer.repositories.CustomerRepository
-import li.doerf.microstore.dto.kafka.CustomerCreate
+import li.doerf.microstore.dto.kafka.CustomerCreated
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class CustomerService @Autowired constructor(
@@ -18,16 +17,15 @@ class CustomerService @Autowired constructor(
         private val log = getLogger(javaClass)
     }
 
-    fun create(customerEvent: CustomerCreate): Customer {
+    fun store(event: CustomerCreated) {
         val customer = Customer(
-                UUID.randomUUID().toString(),
-                customerEvent.email,
-                customerEvent.firstname,
-                customerEvent.lastname
+                event.id,
+                event.email,
+                event.firstname,
+                event.lastname
         )
         customerRepository.save(customer)
-        log.info("Customer $customer saved")
-        return customer
+        log.debug("customer created $customer")
     }
 
 }

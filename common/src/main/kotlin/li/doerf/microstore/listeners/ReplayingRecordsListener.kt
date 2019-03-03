@@ -31,12 +31,12 @@ abstract class ReplayingRecordsListener : ConsumerSeekAware {
         if(isReplaying(record.partition(), record.offset())) {
             return
         }
-        processCommand(event, correlationId, eventResponse)
+        handleBusinessLogic(event, correlationId, eventResponse)
     }
 
     protected abstract fun applyEventToStore(event: Any?, correlationId: String): Any?
 
-    protected abstract fun processCommand(event: Any, correlationId: String, eventResponse: Any?)
+    protected abstract fun handleBusinessLogic(event: Any, correlationId: String, eventResponse: Any?)
 
     override fun onIdleContainer(assignments: MutableMap<TopicPartition, Long>?, callback: ConsumerSeekAware.ConsumerSeekCallback?) {
     }
