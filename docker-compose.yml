@@ -85,7 +85,7 @@ services:
   logstash:
     image: logstash:6.6.1
     depends_on:
-      - payment-svd
+      - payment-svc
       - customer-svc
       - api-svc
     environment:
