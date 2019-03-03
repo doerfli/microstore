@@ -3,7 +3,7 @@ package li.doerf.microstore.api.controllers
 import com.github.kittinunf.fuel.Fuel
 import li.doerf.microstore.api.listeners.CustomersListener
 import li.doerf.microstore.api.rest.dto.CreateCustomerRequest
-import li.doerf.microstore.dto.CustomerCreated
+import li.doerf.microstore.dto.kafka.CustomerCreated
 import li.doerf.microstore.services.KafkaService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail

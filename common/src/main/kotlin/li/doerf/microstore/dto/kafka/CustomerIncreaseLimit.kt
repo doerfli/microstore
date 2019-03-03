@@ -1,4 +1,4 @@
-package li.doerf.microstore.dto
+package li.doerf.microstore.dto.kafka
 
 import li.doerf.microstore.utils.NoArg
 import java.math.BigDecimal

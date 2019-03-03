@@ -1,7 +1,7 @@
 package li.doerf.microstore.api.listeners
 
 import li.doerf.microstore.TOPIC_CUSTOMERS
-import li.doerf.microstore.dto.CustomerCreated
+import li.doerf.microstore.dto.kafka.CustomerCreated
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

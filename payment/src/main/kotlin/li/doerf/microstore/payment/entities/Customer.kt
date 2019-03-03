@@ -6,10 +6,6 @@ import java.math.BigDecimal
 
 @RedisHash("Customer")
 data class Customer(
-        @Id var id: String,
-        val email: String,
-        var firstname: String,
-        var lastname: String,
-        /** only valid in payment module */
+        @Id val id: String,
         var creditLimit: BigDecimal = BigDecimal.ZERO
 )

@@ -1,7 +1,7 @@
 package li.doerf.microstore.api.listeners
 
 import li.doerf.microstore.TOPIC_CUSTOMERS
-import li.doerf.microstore.dto.CustomerCreated
+import li.doerf.microstore.dto.kafka.CustomerCreated
 import li.doerf.microstore.utils.getLogger
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener

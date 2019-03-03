@@ -1,9 +1,9 @@
 package li.doerf.microstore.customer.listeners
 
 import li.doerf.microstore.TOPIC_CUSTOMERS
+import li.doerf.microstore.customer.entities.Customer
 import li.doerf.microstore.customer.services.CustomerService
-import li.doerf.microstore.dto.CustomerCreate
-import li.doerf.microstore.entities.Customer
+import li.doerf.microstore.dto.kafka.CustomerCreate
 import li.doerf.microstore.services.KafkaService
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition

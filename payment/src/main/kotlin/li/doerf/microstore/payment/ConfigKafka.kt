@@ -32,7 +32,7 @@ class ConfigKafka {
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
         props[ConsumerConfig.GROUP_ID_CONFIG] = consumerGroup
-        props[JsonDeserializer.TRUSTED_PACKAGES] = "li.doerf.microstore.dto"
+        props[JsonDeserializer.TRUSTED_PACKAGES] = "li.doerf.microstore.dto.kafka"
 
         return props
     }
@@ -68,7 +68,6 @@ class ConfigKafka {
         props[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = kafkaHost
         props[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         props[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
-//        props[JsonDeserializer.TRUSTED_PACKAGES] = "li.doerf.microstore.dto"
         return props
     }
 

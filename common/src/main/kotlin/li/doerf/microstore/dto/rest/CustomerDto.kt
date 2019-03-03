@@ -1,9 +1,6 @@
-package li.doerf.microstore.dto
+package li.doerf.microstore.dto.rest
 
-import li.doerf.microstore.utils.NoArg
-
-@NoArg
-data class CustomerCreated(
+data class CustomerDto(
         val id: String,
         val email: String,
         val firstname: String,

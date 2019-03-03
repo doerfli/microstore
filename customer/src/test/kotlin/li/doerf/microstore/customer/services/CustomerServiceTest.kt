@@ -1,7 +1,7 @@
 package li.doerf.microstore.customer.services
 
 import li.doerf.microstore.customer.repositories.CustomerRepository
-import li.doerf.microstore.dto.CustomerCreate
+import li.doerf.microstore.dto.kafka.CustomerCreate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

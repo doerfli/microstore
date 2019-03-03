@@ -6,9 +6,9 @@ import li.doerf.microstore.TOPIC_CUSTOMERS
 import li.doerf.microstore.api.listeners.CustomersListener
 import li.doerf.microstore.api.rest.dto.CreateCustomerRequest
 import li.doerf.microstore.api.rest.dto.CreateCustomerResponse
-import li.doerf.microstore.dto.CustomerCreate
-import li.doerf.microstore.dto.CustomerCreated
-import li.doerf.microstore.entities.Customer
+import li.doerf.microstore.dto.kafka.CustomerCreate
+import li.doerf.microstore.dto.kafka.CustomerCreated
+import li.doerf.microstore.dto.rest.CustomerDto
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
@@ -68,10 +68,10 @@ class CustomerController @Autowired constructor(
     }
 
     @GetMapping
-    fun get(): List<Customer> {
+    fun get(): List<CustomerDto> {
         log.debug("received request to get all customers")
         val response = fuel.get("$customerSvcBaseUrl/customers")
-                .responseObject<List<Customer>>()
+                .responseObject<List<CustomerDto>>()
         log.debug("returning response")
         return response.third.get()
     }

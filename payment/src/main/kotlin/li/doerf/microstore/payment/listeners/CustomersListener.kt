@@ -1,8 +1,8 @@
 package li.doerf.microstore.payment.listeners
 
 import li.doerf.microstore.TOPIC_CUSTOMERS
-import li.doerf.microstore.dto.CustomerCreated
-import li.doerf.microstore.dto.CustomerIncreaseLimit
+import li.doerf.microstore.dto.kafka.CustomerCreated
+import li.doerf.microstore.dto.kafka.CustomerIncreaseLimit
 import li.doerf.microstore.listeners.ReplayingRecordsListener
 import li.doerf.microstore.payment.services.CreditLimitService
 import li.doerf.microstore.payment.services.CustomerService
