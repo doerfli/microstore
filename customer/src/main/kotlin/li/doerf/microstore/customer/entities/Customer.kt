@@ -1,4 +1,4 @@
-package li.doerf.microstore.entities
+package li.doerf.microstore.customer.entities
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash

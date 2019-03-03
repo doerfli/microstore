@@ -18,6 +18,24 @@ services:
       - MICROSTORE_REDISPORT=6379
     volumes:
       - customer-svc-logs:/log
+  payment-redis:
+    image: redis:5.0.3-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+  payment-svc:
+    build:
+      context: ./
+      dockerfile: Dockerfile-payment
+    image: doerfli/cloudstore-payment-svc
+    restart: always
+    depends_on:
+      - payment-redis
+    environment:
+      - MICROSTORE_REDISHOST=payment-redis
+      - MICROSTORE_REDISPORT=6379
+    volumes:
+      - payment-svc-logs:/log
   api-svc:
     build:
       context: ./
@@ -26,6 +44,7 @@ services:
     restart: always
     depends_on:
       - customer-svc
+      - payment-svc
     ports:
       - 8080:8080
     environment:
@@ -66,6 +85,7 @@ services:
   logstash:
     image: logstash:6.6.1
     depends_on:
+      - payment-svd
       - customer-svc
       - api-svc
     environment:
@@ -73,8 +93,10 @@ services:
     volumes:
       - "./logstash/:/usr/share/logstash/pipeline/:ro"
       - customer-svc-logs:/logs/customer/log
+      - payment-svc-logs:/logs/payment/log
       - api-svc-logs:/logs/api/log
 
 volumes:
   customer-svc-logs:
+  payment-svc-logs:
   api-svc-logs:
