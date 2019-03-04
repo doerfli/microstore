@@ -47,6 +47,4 @@ class CustomersListener @Autowired constructor(
         }
     }
 
-
-
 }
