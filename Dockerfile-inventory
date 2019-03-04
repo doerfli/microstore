@@ -8,7 +8,7 @@ COPY settings.gradle .
 COPY common common
 COPY inventory inventory
 
-RUN ./gradlew -Dorg.gradle.daemon=false :api:assemble
+RUN ./gradlew -Dorg.gradle.daemon=false :inventory:assemble
 RUN mkdir -p inventory/build/libs/dependency && (cd inventory/build/libs/dependency; jar -xf ../*.jar)
 
 FROM openjdk:11-jdk-slim
