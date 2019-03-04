@@ -22,7 +22,7 @@ services:
     image: redis:5.0.3-alpine
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6379"
   payment-svc:
     build:
       context: ./
@@ -33,7 +33,7 @@ services:
       - payment-redis
     environment:
       - MICROSTORE_REDISHOST=payment-redis
-      - MICROSTORE_REDISPORT=6379
+      - MICROSTORE_REDISPORT=6380
     volumes:
       - payment-svc-logs:/log
   api-svc:
