@@ -36,6 +36,24 @@ services:
       - MICROSTORE_REDISPORT=6380
     volumes:
       - payment-svc-logs:/log
+  inventory-redis:
+    image: redis:5.0.3-alpine
+    restart: always
+    ports:
+      - "6381:6379"
+  inventory-svc:
+    build:
+      context: ./
+      dockerfile: Dockerfile-inventory
+    image: doerfli/cloudstore-inventory-svc
+    restart: always
+    depends_on:
+      - inventory-redis
+    environment:
+      - MICROSTORE_REDISHOST=inventory-redis
+      - MICROSTORE_REDISPORT=6381
+    volumes:
+      - inventory-svc-logs:/log
   api-svc:
     build:
       context: ./
@@ -45,6 +63,7 @@ services:
     depends_on:
       - customer-svc
       - payment-svc
+      - inventory-svc
     ports:
       - 8080:8080
     environment:
@@ -86,6 +105,7 @@ services:
     image: logstash:6.6.1
     depends_on:
       - payment-svc
+      - inventory-svc
       - customer-svc
       - api-svc
     environment:
@@ -99,4 +119,5 @@ services:
 volumes:
   customer-svc-logs:
   payment-svc-logs:
+  inventory-svc-logs:
   api-svc-logs:
