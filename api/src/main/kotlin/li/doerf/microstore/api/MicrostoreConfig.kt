@@ -11,6 +11,10 @@ class MicrostoreConfig {
     private lateinit var customerSvcHostname: String
     @Value("\${microstore.customer.port}")
     private lateinit var customerSvcPort: String
+    @Value("\${microstore.inventory.hostname}")
+    private lateinit var inventorySvcHostname: String
+    @Value("\${microstore.inventory.port}")
+    private lateinit var inventorySvcPort: String
 
     @Bean
     fun fuel(): Fuel {
@@ -20,6 +24,11 @@ class MicrostoreConfig {
     @Bean
     fun customerSvcBaseUrl(): String {
         return "http://$customerSvcHostname:$customerSvcPort"
+    }
+
+    @Bean
+    fun inventorySvcBaseUrl(): String {
+        return "http://$inventorySvcHostname:$inventorySvcPort"
     }
 
 }
