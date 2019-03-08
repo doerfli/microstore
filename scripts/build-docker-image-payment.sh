@@ -1,8 +1,5 @@
 #!/bin/bash
-set -e 
+set -e
 
-export component=payment
-export mainclass=li.doerf.microstore.payment.PaymentApplicationKt
-
-docker build -t doerfli/microstore-payment-svc:latest -f Dockerfile .
+docker build --build-arg component=payment --build-arg mainclass=li.doerf.microstore.payment.PaymentApplicationKt -t doerfli/microstore-payment-svc:latest -f Dockerfile .
 docker push doerfli/microstore-payment-svc:latest

@@ -1,8 +1,8 @@
 FROM openjdk:11-jdk-slim as build
 WORKDIR /workspace
 
-ENV component api
-ENV mainclass li.doerf.microstore.api.ApiApplicationKt
+ARG component=api
+ARG mainclass=li.doerf.microstore.api.ApiApplicationKt
 
 COPY gradlew .
 COPY gradle gradle
