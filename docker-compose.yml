@@ -57,7 +57,7 @@ services:
   api-svc:
     build:
       context: ./
-      dockerfile: Dockerfile-api
+      dockerfile: Dockerfile
     image: doerfli/cloudstore-api-svc
     restart: always
     depends_on:
