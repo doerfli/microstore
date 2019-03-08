@@ -7,7 +7,7 @@ matrix:
       script:
         - ./gradlew build
 
-    - language: ruby
+    - language: generic
       services:
         - docker
       before_install:
@@ -15,7 +15,7 @@ matrix:
       script:
         - ./scripts/build-docker-image-api.sh
 
-    - language: ruby
+    - language: generic
       services:
         - docker
       before_install:
@@ -23,7 +23,7 @@ matrix:
       script:
         - ./scripts/build-docker-image-customer.sh
 
-    - language: ruby
+    - language: generic
       services:
         - docker
       before_install:
@@ -31,7 +31,7 @@ matrix:
       script:
         - ./scripts/build-docker-image-inventory.sh
 
-    - language: ruby
+    - language: generic
       services:
         - docker
       before_install:
