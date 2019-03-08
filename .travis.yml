@@ -13,7 +13,7 @@ matrix:
       before_install:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
-        - ./build-docker-image-api.sh
+        - ./scripts/build-docker-image-api.sh
 
     - language: ruby
       services:
@@ -21,7 +21,7 @@ matrix:
       before_install:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
-        - ./build-docker-image-customer.sh
+        - ./scripts/build-docker-image-customer.sh
 
     - language: ruby
       services:
@@ -29,7 +29,7 @@ matrix:
       before_install:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
-        - ./build-docker-image-inventory.sh
+        - ./scripts/build-docker-image-inventory.sh
 
     - language: ruby
       services:
@@ -37,4 +37,4 @@ matrix:
       before_install:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
-        - ./build-docker-image-payment.sh
+        - ./scripts/build-docker-image-payment.sh
