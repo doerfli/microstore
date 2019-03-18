@@ -8,6 +8,9 @@
 
 <script>
     import CustomerForm from "./CustomerForm";
+    // import axios from 'axios'
+    import {AXIOS} from "@/http-common"
+
     export default {
         name: "NewCustomer",
         components: {CustomerForm},
@@ -15,6 +18,16 @@
             saveNewCustomer: function(data) {
                 console.log("saving");
                 console.log(data);
+                AXIOS.post(`/customers`, {
+                    firstname: data.firstname,
+                    lastname: data.lastname,
+                    email: data.email
+                }).then(response => {
+                  console.log(response)
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
         }
     }
