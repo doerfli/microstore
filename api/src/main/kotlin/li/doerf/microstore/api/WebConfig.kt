@@ -12,7 +12,7 @@ class WebConfig : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         // TODO only allow correct origins
-        registry.addMapping("/**")
+        registry.addMapping("/**").allowedOrigins("http://localhost:8070", "http://frontend:8070")
     }
 
 }
