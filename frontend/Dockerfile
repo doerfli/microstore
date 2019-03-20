@@ -4,6 +4,7 @@ COPY *js /app/
 COPY package.json /app
 COPY postcss.config.js /app
 COPY yarn.lock /app
+COPY .env.production /app
 RUN apk add yarn
 RUN yarn install
 COPY src/ /app/src/
