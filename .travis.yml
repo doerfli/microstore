@@ -6,6 +6,8 @@ matrix:
         - openjdk11
       script:
         - ./gradlew build
+      env:
+        - BUILD_NAME=gradle
 
     - language: generic
       services:
@@ -14,6 +16,8 @@ matrix:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
         - ./scripts/build-docker-image-api.sh
+      env:
+        - BUILD_NAME=docker_api
 
     - language: generic
       services:
@@ -22,6 +26,8 @@ matrix:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
         - ./scripts/build-docker-image-customer.sh
+      env:
+        - BUILD_NAME=docker_customer
 
     - language: generic
       services:
@@ -30,6 +36,8 @@ matrix:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
         - ./scripts/build-docker-image-inventory.sh
+      env:
+        - BUILD_NAME=docker_inventory
 
     - language: generic
       services:
@@ -38,6 +46,8 @@ matrix:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
         - ./scripts/build-docker-image-payment.sh
+      env:
+        - BUILD_NAME=docker_payment
 
     - language: generic
       services:
@@ -46,3 +56,5 @@ matrix:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
         - ./scripts/build-docker-image-frontend.sh
+      env:
+        - BUILD_NAME=docker_frontend
