@@ -8,7 +8,10 @@ services:
   customer-svc:
     build:
       context: ./
-      dockerfile: Dockerfile-customer
+      dockerfile: Dockerfile
+      args:
+        component: customer
+        mainclass: li.doerf.microstore.customer.CustomerApplicationKt
     image: doerfli/cloudstore-customer-svc
     restart: always
     depends_on:
@@ -26,7 +29,10 @@ services:
   payment-svc:
     build:
       context: ./
-      dockerfile: Dockerfile-payment
+      dockerfile: Dockerfile
+      args:
+        component: payment
+        mainclass: li.doerf.microstore.payment.PaymentApplicationKt
     image: doerfli/cloudstore-payment-svc
     restart: always
     depends_on:
@@ -44,7 +50,10 @@ services:
   inventory-svc:
     build:
       context: ./
-      dockerfile: Dockerfile-inventory
+      dockerfile: Dockerfile
+      args:
+        component: inventory
+        mainclass: li.doerf.microstore.inventory.InventoryApplicationKt
     image: doerfli/cloudstore-inventory-svc
     restart: always
     depends_on:
@@ -58,6 +67,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        component: api
+        mainclass: li.doerf.microstore.api.ApiApplicationKt
     image: doerfli/cloudstore-api-svc
     restart: always
     depends_on:
