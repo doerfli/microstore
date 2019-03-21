@@ -38,3 +38,11 @@ matrix:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
         - ./scripts/build-docker-image-payment.sh
+
+    - language: generic
+      services:
+        - docker
+      before_install:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      script:
+        - ./scripts/build-docker-image-frontend.sh
