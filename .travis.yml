@@ -3,7 +3,7 @@ matrix:
     - language: java
       install: true
       jdk:
-        - openjdk11
+        - openjdk12
       script:
         - ./gradlew build
       env:

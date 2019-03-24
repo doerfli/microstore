@@ -1,5 +1,5 @@
 #= Build ============================================================
-FROM openjdk:11-jdk-slim as build
+FROM openjdk:12-jdk-slim as build
 WORKDIR /workspace
 
 COPY gradlew .
@@ -16,7 +16,7 @@ RUN ./gradlew -Dorg.gradle.daemon=false :$component:assemble
 RUN mkdir -p $component/build/libs/dependency && (cd $component/build/libs/dependency; jar -xf ../*.jar)
 
 #= Run ==============================================================
-FROM openjdk:11-jdk-slim
+FROM openjdk:12-jdk-slim
 
 VOLUME /tmp
 VOLUME /log
