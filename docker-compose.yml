@@ -12,7 +12,7 @@ services:
       args:
         component: customer
         mainclass: li.doerf.microstore.customer.CustomerApplicationKt
-    image: doerfli/cloudstore-customer-svc
+    image: doerfli/microstore-customer-svc
     restart: always
     depends_on:
       - customer-redis
@@ -33,7 +33,7 @@ services:
       args:
         component: payment
         mainclass: li.doerf.microstore.payment.PaymentApplicationKt
-    image: doerfli/cloudstore-payment-svc
+    image: doerfli/microstore-payment-svc
     restart: always
     depends_on:
       - payment-redis
@@ -54,7 +54,7 @@ services:
       args:
         component: inventory
         mainclass: li.doerf.microstore.inventory.InventoryApplicationKt
-    image: doerfli/cloudstore-inventory-svc
+    image: doerfli/microstore-inventory-svc
     restart: always
     depends_on:
       - inventory-redis
@@ -70,7 +70,7 @@ services:
       args:
         component: api
         mainclass: li.doerf.microstore.api.ApiApplicationKt
-    image: doerfli/cloudstore-api-svc
+    image: doerfli/microstore-api-svc
     restart: always
     depends_on:
       - customer-svc

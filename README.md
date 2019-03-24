@@ -43,7 +43,7 @@ docker-compose up -d kafka
 
 ```
 docker run \
---net=cloudstore_default \
+--net=microstore_default \
 --rm confluentinc/cp-kafka:5.1.0 \
 kafka-topics --create --topic foo --partitions 1 --replication-factor 1 \
 --if-not-exists --zookeeper zookeeper:2181
@@ -51,7 +51,7 @@ kafka-topics --create --topic foo --partitions 1 --replication-factor 1 \
 
 ```
 docker run \
---net=cloudstore_default \
+--net=microstore_default \
 --rm \
 confluentinc/cp-kafka:5.1.0 \
 kafka-topics --describe --topic foo --zookeeper zookeeper:2181
@@ -61,7 +61,7 @@ kafka-topics --describe --topic foo --zookeeper zookeeper:2181
 
 ```
 docker run \
---net=cloudstore_default \
+--net=microstore_default \
 --rm \
 confluentinc/cp-kafka:5.1.0 \
 bash -c "seq 42 | kafka-console-producer --request-required-acks 1 \
@@ -70,7 +70,7 @@ bash -c "seq 42 | kafka-console-producer --request-required-acks 1 \
 
 ```
 docker run \
---net=cloudstore_default \
+--net=microstore_default \
 --rm \
 confluentinc/cp-kafka:5.1.0 \
 kafka-console-consumer --bootstrap-server kafka:9092 --topic foo --from-beginning --max-messages 42

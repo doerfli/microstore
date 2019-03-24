@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="li.doerf.cloudstore.api.main" target="1.8" />
+      <module name="li.doerf.cloudstore.api.test" target="1.8" />
+      <module name="li.doerf.cloudstore.customer.main" target="1.8" />
+      <module name="li.doerf.cloudstore.customer.test" target="1.8" />
+      <module name="li.doerf.cloudstore.inventory.main" target="1.8" />
+      <module name="li.doerf.cloudstore.inventory.test" target="1.8" />
+      <module name="li.doerf.cloudstore.payment.main" target="1.8" />
+      <module name="li.doerf.cloudstore.payment.test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
