@@ -14,6 +14,11 @@
     export default {
         name: "NewCustomer",
         components: {CustomerForm},
+        data: function() {
+            return {
+                errors: []
+            }
+        },
         methods: {
             saveNewCustomer: function(data) {
                 console.log("saving");
@@ -23,7 +28,8 @@
                     lastname: data.lastname,
                     email: data.email
                 }).then(response => {
-                  console.log(response)
+                    console.log(response);
+                    this.$emit('new', response.data);
                 })
                 .catch(e => {
                     this.errors.push(e)

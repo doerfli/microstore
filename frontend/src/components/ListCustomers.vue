@@ -1,6 +1,7 @@
 <template>
   <div>
-    <CustomerLine v-for="customer in customers" v-bind:key="customer.id" v-bind:data="customer"/>
+    <CustomerLine
+        v-for="customer in customers" v-bind:key="customer.id" v-bind:data="customer"/>
   </div>
 </template>
 
@@ -11,20 +12,13 @@
     export default {
         name: "ListCustomers",
         components: {CustomerLine},
+        props: [
+            'customers'
+        ],
         data: function() {
             return {
-                customers: [],
                 errors: []
             }
-        },
-        created: function () {
-            AXIOS.get(`/customers`).then(response => {
-                console.log(response)
-                this.customers = response.data
-            })
-            .catch(e => {
-                this.errors.push(e)
-            })
         }
     }
 </script>
