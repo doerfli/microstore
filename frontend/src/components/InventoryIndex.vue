@@ -19,14 +19,19 @@
                 items: []
             }
         },
+        methods: {
+            reload: function() {
+                AXIOS.get(`/inventory`).then(response => {
+                    console.log(response);
+                    this.items = response.data
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
+            }
+        },
         created: function () {
-            AXIOS.get(`/inventory`).then(response => {
-                console.log(response);
-                this.items = response.data
-            })
-            .catch(e => {
-                this.errors.push(e)
-            })
+            this.reload()
         }
     }
 </script>

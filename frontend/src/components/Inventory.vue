@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>Inventory</h1>
-    <button v-on:click="orderItems()">Order items</button>
-    <InventoryIndex />
+    <button v-on:click="orderItems()">Order items</button> |
+    <button v-on:click="reload()">Reload</button>
+    <InventoryIndex ref="inventoryindex"/>
   </div>
 </template>
 
@@ -18,6 +19,9 @@
         methods: {
             orderItems: function() {
                 AXIOS.post(`/inventory`, {})
+            },
+            reload: function() {
+                this.$refs.inventoryindex.reload()
             }
         }
     }
