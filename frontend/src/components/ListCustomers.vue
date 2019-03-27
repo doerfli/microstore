@@ -6,18 +6,14 @@
 </template>
 
 <script>
-    import {AXIOS} from "@/http-common"
     import CustomerLine from "./CustomerLine.vue"
 
     export default {
         name: "ListCustomers",
         components: {CustomerLine},
-        props: [
-            'customers'
-        ],
-        data: function() {
-            return {
-                errors: []
+        computed: {
+            customers () {
+                return this.$store.state.customers.all
             }
         }
     }
