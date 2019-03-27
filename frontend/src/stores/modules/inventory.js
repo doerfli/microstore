@@ -10,8 +10,8 @@ const getters = {}
 
 // actions
 const actions = {
-    getAll({ commit }) {
-        AXIOS.get(`/customers`).then(response => {
+    reload({ commit }) {
+        AXIOS.get(`/inventory`).then(response => {
             console.log(response);
             commit('setAll', response.data)
         })
@@ -25,10 +25,6 @@ const actions = {
 const mutations = {
     setAll(state, customers) {
         state.all = customers
-    },
-
-    add(state, customer) {
-        state.all.push(customer)
     }
 }
 

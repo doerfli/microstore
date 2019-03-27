@@ -6,7 +6,6 @@
 </template>
 
 <script>
-    import {AXIOS} from "@/http-common";
     import InventoryItem from "./InventoryItem";
 
     export default {
@@ -14,24 +13,13 @@
         components: {
             InventoryItem
         },
-        data: function() {
-            return {
-                items: []
-            }
-        },
-        methods: {
-            reload: function() {
-                AXIOS.get(`/inventory`).then(response => {
-                    console.log(response);
-                    this.items = response.data
-                })
-                .catch(e => {
-                    this.errors.push(e)
-                })
+        computed: {
+            items () {
+                return this.$store.state.inventory.all
             }
         },
         created: function () {
-            this.reload()
+            this.$store.dispatch("inventory/reload")
         }
     }
 </script>

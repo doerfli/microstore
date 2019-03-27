@@ -3,7 +3,7 @@
     <h1>Inventory</h1>
     <button v-on:click="orderItems()">Order items</button> |
     <button v-on:click="reload()">Reload</button>
-    <InventoryIndex ref="inventoryindex"/>
+    <InventoryIndex />
   </div>
 </template>
 
@@ -21,7 +21,7 @@
                 AXIOS.post(`/inventory`, {})
             },
             reload: function() {
-                this.$refs.inventoryindex.reload()
+                this.$store.dispatch("inventory/reload")
             }
         }
     }
