@@ -1,10 +1,53 @@
 version: '3'
 services:
+  api-svc:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        component: api
+        mainclass: li.doerf.microstore.api.ApiApplicationKt
+    image: doerfli/microstore-api-svc
+    restart: always
+    depends_on:
+      - customer-svc
+      - inventory-svc
+      - kafka
+      - order-svc
+      - payment-svc
+    ports:
+      - 8080:8080
+    environment:
+      - MICROSTORE_CUSTOMER_HOSTNAME=customer-svc
+    volumes:
+      - api-svc-logs:/log
   customer-redis:
     image: redis:5.0.3-alpine
     restart: always
     ports:
       - "6379:6379"
+  inventory-redis:
+    image: redis:5.0.3-alpine
+    restart: always
+    ports:
+      - "6381:6379"
+    inventory-svc:
+      build:
+        context: ./
+        dockerfile: Dockerfile
+        args:
+          component: inventory
+          mainclass: li.doerf.microstore.inventory.InventoryApplicationKt
+      image: doerfli/microstore-inventory-svc
+      restart: always
+      depends_on:
+        - inventory-redis
+        - kafka
+      environment:
+        - MICROSTORE_REDISHOST=inventory-redis
+        - MICROSTORE_REDISPORT=6381
+      volumes:
+        - inventory-svc-logs:/log
   customer-svc:
     build:
       context: ./
@@ -22,6 +65,28 @@ services:
       - MICROSTORE_REDISPORT=6379
     volumes:
       - customer-svc-logs:/log
+  order-redis:
+    image: redis:5.0.3-alpine
+    restart: always
+    ports:
+      - "6382:6379"
+    order-svc:
+      build:
+        context: ./
+        dockerfile: Dockerfile
+        args:
+          component: order
+          mainclass: li.doerf.microstore.order.OrderApplicationKt
+      image: doerfli/microstore-order-svc
+      restart: always
+      depends_on:
+        - kafka
+        - order-redis
+      environment:
+        - MICROSTORE_REDISHOST=order-redis
+        - MICROSTORE_REDISPORT=6382
+      volumes:
+        - order-svc-logs:/log
   payment-redis:
     image: redis:5.0.3-alpine
     restart: always
@@ -44,72 +109,7 @@ services:
       - MICROSTORE_REDISPORT=6380
     volumes:
       - payment-svc-logs:/log
-  order-redis:
-    image: redis:5.0.3-alpine
-    restart: always
-    ports:
-      - "6382:6379"
-  order-svc:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        component: order
-        mainclass: li.doerf.microstore.order.OrderApplicationKt
-    image: doerfli/microstore-order-svc
-    restart: always
-    depends_on:
-      - order-redis
-      - kafka
-    environment:
-      - MICROSTORE_REDISHOST=order-redis
-      - MICROSTORE_REDISPORT=6382
-    volumes:
-      - order-svc-logs:/log
-  inventory-redis:
-    image: redis:5.0.3-alpine
-    restart: always
-    ports:
-      - "6381:6379"
-  inventory-svc:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        component: inventory
-        mainclass: li.doerf.microstore.inventory.InventoryApplicationKt
-    image: doerfli/microstore-inventory-svc
-    restart: always
-    depends_on:
-      - inventory-redis
-      - kafka
-    environment:
-      - MICROSTORE_REDISHOST=inventory-redis
-      - MICROSTORE_REDISPORT=6381
-    volumes:
-      - inventory-svc-logs:/log
-  api-svc:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        component: api
-        mainclass: li.doerf.microstore.api.ApiApplicationKt
-    image: doerfli/microstore-api-svc
-    restart: always
-    depends_on:
-      - kafka
-      - customer-svc
-      - payment-svc
-      - order-svc
-      - inventory-svc
-    ports:
-      - 8080:8080
-    environment:
-      - MICROSTORE_CUSTOMER_HOSTNAME=customer-svc
-    volumes:
-      - api-svc-logs:/log
-  
+
   zookeeper:
     image: confluentinc/cp-zookeeper:5.1.2
     ports:
@@ -143,23 +143,23 @@ services:
   logstash:
     image: logstash:6.6.1
     depends_on:
-      - payment-svc
-      - order-svc
-      - inventory-svc
-      - customer-svc
       - api-svc
+      - customer-svc
+      - inventory-svc
+      - order-svc
+      - payment-svc
     environment:
       - "CLOUDSTORE_ROOT=/logs"
     volumes:
       - "./logstash/:/usr/share/logstash/pipeline/:ro"
-      - customer-svc-logs:/logs/customer/log
-      - payment-svc-logs:/logs/payment/log
-      - order-svc-logs:/logs/order/log
       - api-svc-logs:/logs/api/log
+      - customer-svc-logs:/logs/customer/log
+      - order-svc-logs:/logs/order/log
+      - payment-svc-logs:/logs/payment/log
 
 volumes:
-  customer-svc-logs:
-  payment-svc-logs:
-  order-svc-logs:
-  inventory-svc-logs:
   api-svc-logs:
+  customer-svc-logs:
+  inventory-svc-logs:
+  order-svc-logs:
+  payment-svc-logs:

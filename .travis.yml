@@ -35,6 +35,16 @@ matrix:
       before_install:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
+        - ./scripts/build-docker-image-frontend.sh
+      env:
+        - BUILD_NAME=docker_frontend
+
+    - language: generic
+      services:
+        - docker
+      before_install:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      script:
         - ./scripts/build-docker-image-inventory.sh
       env:
         - BUILD_NAME=docker_inventory
@@ -59,12 +69,3 @@ matrix:
       env:
         - BUILD_NAME=docker_payment
 
-    - language: generic
-      services:
-        - docker
-      before_install:
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      script:
-        - ./scripts/build-docker-image-frontend.sh
-      env:
-        - BUILD_NAME=docker_frontend

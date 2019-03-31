@@ -1,6 +1,6 @@
 rootProject.name = 'microstore'
-include 'common'
 include 'api'
+include 'common'
 include 'customer'
 include 'inventory'
 include 'order'

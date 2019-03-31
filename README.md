@@ -16,7 +16,7 @@ Experiment project for microservices
 Only start infrastructure containers, no services
 
 ```
-docker-compose up -d customer-redis payment-redis order-redis inventory-redis zookeeper kafka elasticsearch kibana
+docker-compose up -d zookeeper kafka customer-redis inventory-redis order-redis payment-redis elasticsearch kibana
 ```
 
 Local logging with logstash into elasticsearch container (kibana viewer available at http://localhost:5601)
