@@ -1,10 +1,10 @@
 package li.doerf.microstore.api.controllers
 
-import li.doerf.microstore.TOPIC_CUSTOMERS
 import li.doerf.microstore.TOPIC_ORDERS
 import li.doerf.microstore.api.listeners.OrdersListener
-import li.doerf.microstore.api.rest.dto.*
-import li.doerf.microstore.dto.kafka.CustomerCreated
+import li.doerf.microstore.api.rest.dto.CreateOrderRequest
+import li.doerf.microstore.api.rest.dto.CreateOrderResponse
+import li.doerf.microstore.api.rest.dto.OrderStatus
 import li.doerf.microstore.dto.kafka.OrderCreate
 import li.doerf.microstore.dto.kafka.OrderCreated
 import li.doerf.microstore.services.KafkaService
@@ -44,7 +44,8 @@ class OrderController @Autowired constructor(
 
     private fun createOrderCreateEvent(order: CreateOrderRequest): Any {
         return OrderCreate(
-                order.customerId
+                order.customerId,
+                order.itemsIds
         )
     }
 
