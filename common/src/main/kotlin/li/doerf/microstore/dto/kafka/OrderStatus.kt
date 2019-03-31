@@ -1,4 +1,4 @@
-package li.doerf.microstore.api.rest.dto
+package li.doerf.microstore.dto.kafka
 
 enum class OrderStatus {
     SHIPPED,

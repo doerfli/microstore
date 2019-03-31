@@ -1,7 +1,7 @@
 package li.doerf.microstore.api.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
-import li.doerf.microstore.dto.kafka.OrderCreated
+import li.doerf.microstore.dto.kafka.OrderFinished
 import li.doerf.microstore.utils.getLogger
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
@@ -19,7 +19,7 @@ class OrdersListener {
     }
 
     private val waitingLatches = mutableMapOf<String, CountDownLatch>()
-    private val results = mutableMapOf<String, OrderCreated>()
+    private val results = mutableMapOf<String, OrderFinished>()
 
     @KafkaListener(topics = [TOPIC_ORDERS])
     @Transactional
@@ -27,7 +27,7 @@ class OrdersListener {
         log.debug("received: $record")
         val correlationId =
                 String(record.headers().headers(KafkaHeaders.CORRELATION_ID).first().value())
-        val event = record.value() as? OrderCreated ?: return
+        val event = record.value() as? OrderFinished ?: return
         results[correlationId] = event
         val latch = waitingLatches.remove(correlationId)
         if (latch == null) {
@@ -38,8 +38,8 @@ class OrdersListener {
         latch.countDown()
     }
 
-    fun registerCorrelationIdForResponse(correlationId: String): CompletableFuture<OrderCreated> {
-        return CompletableFuture.supplyAsync<OrderCreated> {
+    fun registerCorrelationIdForResponse(correlationId: String): CompletableFuture<OrderFinished> {
+        return CompletableFuture.supplyAsync<OrderFinished> {
             val latch = CountDownLatch(1)
             waitingLatches[correlationId] = latch
             latch.await()

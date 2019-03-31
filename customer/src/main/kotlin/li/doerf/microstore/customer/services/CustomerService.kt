@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CustomerService @Autowired constructor(
-        val customerRepository: CustomerRepository
+        private val customerRepository: CustomerRepository
 ) {
 
     companion object {
@@ -26,6 +26,12 @@ class CustomerService @Autowired constructor(
         )
         customerRepository.save(customer)
         log.debug("customer created $customer")
+    }
+
+    fun hasCustomer(customerId: String): Boolean {
+        val exists = !customerRepository.findById(customerId).isEmpty
+        log.debug("customerid $customerId exists? $exists")
+        return exists
     }
 
 }

@@ -4,9 +4,9 @@ import li.doerf.microstore.TOPIC_ORDERS
 import li.doerf.microstore.api.listeners.OrdersListener
 import li.doerf.microstore.api.rest.dto.CreateOrderRequest
 import li.doerf.microstore.api.rest.dto.CreateOrderResponse
-import li.doerf.microstore.api.rest.dto.OrderStatus
 import li.doerf.microstore.dto.kafka.OrderCreate
-import li.doerf.microstore.dto.kafka.OrderCreated
+import li.doerf.microstore.dto.kafka.OrderFinished
+import li.doerf.microstore.dto.kafka.OrderStatus
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
@@ -58,7 +58,7 @@ class OrderController @Autowired constructor(
     }
 
 
-    private fun processResponse(event: OrderCreated): CreateOrderResponse {
+    private fun processResponse(event: OrderFinished): CreateOrderResponse {
         return CreateOrderResponse(
                 event.id, // TODO
                 0, // TODO
