@@ -45,6 +45,16 @@ matrix:
       before_install:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       script:
+        - ./scripts/build-docker-image-order.sh
+      env:
+        - BUILD_NAME=docker_order
+
+    - language: generic
+      services:
+        - docker
+      before_install:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      script:
         - ./scripts/build-docker-image-payment.sh
       env:
         - BUILD_NAME=docker_payment
