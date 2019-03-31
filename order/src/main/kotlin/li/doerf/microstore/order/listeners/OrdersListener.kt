@@ -46,6 +46,9 @@ class OrdersListener @Autowired constructor(
                         ),
                         correlationId)
             }
+            // TODO track order status for all order events
+            // TODO generate order number per customer
+            // TODO finish order
         }
     }
 
