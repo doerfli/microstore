@@ -31,23 +31,23 @@ services:
     restart: always
     ports:
       - "6381:6379"
-    inventory-svc:
-      build:
-        context: ./
-        dockerfile: Dockerfile
-        args:
-          component: inventory
-          mainclass: li.doerf.microstore.inventory.InventoryApplicationKt
-      image: doerfli/microstore-inventory-svc
-      restart: always
-      depends_on:
-        - inventory-redis
-        - kafka
-      environment:
-        - MICROSTORE_REDISHOST=inventory-redis
-        - MICROSTORE_REDISPORT=6381
-      volumes:
-        - inventory-svc-logs:/log
+  inventory-svc:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        component: inventory
+        mainclass: li.doerf.microstore.inventory.InventoryApplicationKt
+    image: doerfli/microstore-inventory-svc
+    restart: always
+    depends_on:
+      - inventory-redis
+      - kafka
+    environment:
+      - MICROSTORE_REDISHOST=inventory-redis
+      - MICROSTORE_REDISPORT=6381
+    volumes:
+      - inventory-svc-logs:/log
   customer-svc:
     build:
       context: ./
@@ -70,23 +70,23 @@ services:
     restart: always
     ports:
       - "6382:6379"
-    order-svc:
-      build:
-        context: ./
-        dockerfile: Dockerfile
-        args:
-          component: order
-          mainclass: li.doerf.microstore.order.OrderApplicationKt
-      image: doerfli/microstore-order-svc
-      restart: always
-      depends_on:
-        - kafka
-        - order-redis
-      environment:
-        - MICROSTORE_REDISHOST=order-redis
-        - MICROSTORE_REDISPORT=6382
-      volumes:
-        - order-svc-logs:/log
+  order-svc:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        component: order
+        mainclass: li.doerf.microstore.order.OrderApplicationKt
+    image: doerfli/microstore-order-svc
+    restart: always
+    depends_on:
+      - kafka
+      - order-redis
+    environment:
+      - MICROSTORE_REDISHOST=order-redis
+      - MICROSTORE_REDISPORT=6382
+    volumes:
+      - order-svc-logs:/log
   payment-redis:
     image: redis:5.0.3-alpine
     restart: always
