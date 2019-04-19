@@ -1,5 +1,5 @@
 #= Build ============================================================
-FROM openjdk:12-jdk-oraclelinux7 as build
+FROM openjdk:12.0.1-jdk-oraclelinux7 as build
 WORKDIR /workspace
 
 COPY gradlew .
@@ -16,7 +16,7 @@ RUN ./gradlew -Dorg.gradle.daemon=false :$component:assemble
 RUN mkdir -p $component/build/libs/dependency && (cd $component/build/libs/dependency; jar -xf ../*.jar)
 
 #= Run ==============================================================
-FROM openjdk:12-jdk-oraclelinux7
+FROM openjdk:12.0.1-jdk-oraclelinux7
 
 VOLUME /tmp
 VOLUME /log
