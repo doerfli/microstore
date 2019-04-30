@@ -2,6 +2,7 @@ package li.doerf.microstore.order.services
 
 import li.doerf.microstore.dto.kafka.OrderOpened
 import li.doerf.microstore.order.entities.Order
+import li.doerf.microstore.order.entities.OrderStatus
 import li.doerf.microstore.order.repositories.OrderRepository
 
 import li.doerf.microstore.utils.getLogger
@@ -22,7 +23,8 @@ class OrderService @Autowired constructor(
         val order = Order(
                 event.id,
                 event.customerId,
-                event.itemsIds
+                event.itemsIds,
+                OrderStatus.OPENED
         )
         orderRepository.save(order)
         log.info("Order opened $order")

@@ -6,6 +6,6 @@ import li.doerf.microstore.utils.NoArg
 data class OrderFinished(
         val id: String,
         val customerId: String,
-        val orderStatus: OrderStatus,
+        val orderStatus: OrderEndState,
         val errorText: String
 )

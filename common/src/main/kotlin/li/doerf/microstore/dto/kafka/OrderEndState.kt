@@ -1,6 +1,6 @@
 package li.doerf.microstore.dto.kafka
 
-enum class OrderStatus {
+enum class OrderEndState {
     SHIPPED,
     SHIPPING_FAILED,
     CUSTOMER_NOT_FOUND,

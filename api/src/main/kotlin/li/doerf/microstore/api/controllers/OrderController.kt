@@ -5,8 +5,8 @@ import li.doerf.microstore.api.listeners.OrdersListener
 import li.doerf.microstore.api.rest.dto.CreateOrderRequest
 import li.doerf.microstore.api.rest.dto.CreateOrderResponse
 import li.doerf.microstore.dto.kafka.OrderCreate
+import li.doerf.microstore.dto.kafka.OrderEndState
 import li.doerf.microstore.dto.kafka.OrderFinished
-import li.doerf.microstore.dto.kafka.OrderStatus
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,7 +63,7 @@ class OrderController @Autowired constructor(
                 event.id, // TODO
                 0, // TODO
                 BigDecimal.ZERO, // TODO
-                OrderStatus.SHIPPING_FAILED, // TODO
+                OrderEndState.SHIPPING_FAILED, // TODO
                 "something happened" // TODO
         )
     }

@@ -3,9 +3,9 @@ package li.doerf.microstore.customer.listeners
 import li.doerf.microstore.TOPIC_ORDERS
 import li.doerf.microstore.customer.services.CustomerService
 import li.doerf.microstore.dto.kafka.OrderCustomerExists
+import li.doerf.microstore.dto.kafka.OrderEndState
 import li.doerf.microstore.dto.kafka.OrderFinished
 import li.doerf.microstore.dto.kafka.OrderOpened
-import li.doerf.microstore.dto.kafka.OrderStatus
 import li.doerf.microstore.listeners.ReplayingRecordsListener
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
@@ -54,7 +54,7 @@ class OrdersListener @Autowired constructor(
                             OrderFinished(
                                     event.id,
                                     event.customerId,
-                                    OrderStatus.CUSTOMER_NOT_FOUND,
+                                    OrderEndState.CUSTOMER_NOT_FOUND,
                                     "customerId ${event.customerId} does not exist}"
                             ),
                             correlationId)
