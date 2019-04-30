@@ -2,6 +2,7 @@ package li.doerf.microstore.order.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
 import li.doerf.microstore.dto.kafka.OrderCreate
+import li.doerf.microstore.dto.kafka.OrderCustomerExists
 import li.doerf.microstore.dto.kafka.OrderOpened
 import li.doerf.microstore.listeners.ReplayingRecordsListener
 import li.doerf.microstore.order.services.OrderService
@@ -27,6 +28,7 @@ class OrdersListener @Autowired constructor(
     override fun applyEventToStore(event: Any?, correlationId: String): Any? {
         when(event) {
             is OrderOpened -> return orderService.open(event)
+            is OrderCustomerExists -> return orderService.updateWithCustomerInfo(event)
         }
         return null
     }
@@ -46,7 +48,6 @@ class OrdersListener @Autowired constructor(
                         ),
                         correlationId)
             }
-            // TODO generate order number per customer
             // TODO finish order
         }
     }

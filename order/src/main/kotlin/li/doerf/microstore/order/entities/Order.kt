@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisHash
 data class Order(
         @Id val id: String,
         val customerId: String,
+        var customerOrderId: Long,
         val itemIds: Collection<String>,
         val status: OrderStatus
 )

@@ -2,6 +2,7 @@ package li.doerf.microstore.customer.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
 import li.doerf.microstore.customer.services.CustomerService
+import li.doerf.microstore.customer.services.OrderService
 import li.doerf.microstore.dto.kafka.OrderCustomerExists
 import li.doerf.microstore.dto.kafka.OrderEndState
 import li.doerf.microstore.dto.kafka.OrderFinished
@@ -17,7 +18,8 @@ import org.springframework.stereotype.Component
 @Component
 class OrdersListener @Autowired constructor(
         val kafkaService: KafkaService,
-        val customerService: CustomerService
+        val customerService: CustomerService,
+        val orderService: OrderService
 ) : ReplayingRecordsListener() {
 
     companion object {
@@ -38,12 +40,14 @@ class OrdersListener @Autowired constructor(
             is OrderOpened -> {
                 val customerExists = customerService.hasCustomer(event.customerId)
                 if(customerExists) {
+                    val orderId = orderService.getOrderId(event.customerId)
                     kafkaService.sendEvent(
                         TOPIC_ORDERS,
                         event.id,
                         OrderCustomerExists(
                                 event.id,
                                 event.customerId,
+                                orderId,
                                 event.itemsIds
                         ),
                         correlationId)
