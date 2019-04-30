@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{data.name}} - On stock: {{data.quantityAvailable}} @ ₸ {{data.price | amount}}
+    {{data.name}} - On stock: {{data.quantityAvailable}} @ ₸ {{data.price | amount}} <br/>
+    <small>{{data.id}}</small>
   </div>
 </template>
 
