@@ -28,8 +28,6 @@ class OrderService @Autowired constructor(
 
     private fun initOrderId(customerId: String): OrderId {
         val orderId = OrderId(customerId, 100000)
-        orderIdRepository.save(orderId)
-        log.info("created orderId $orderId")
         return orderId
     }
 

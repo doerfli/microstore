@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{data.firstname}} {{data.lastname}} &lt;{{data.email}}&gt;
+    {{data.firstname}} {{data.lastname}} &lt;{{data.email}}&gt; <br/>
+    <small>{{data.id}}</small>
   </div>
 </template>
 
