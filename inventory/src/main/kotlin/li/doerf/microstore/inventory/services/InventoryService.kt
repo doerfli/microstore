@@ -45,7 +45,7 @@ class InventoryService @Autowired constructor(
                     InventoryItemAdd(
                             id,
                             it,
-                            BigDecimal.valueOf(Random().nextDouble() * 50),
+                            BigDecimal.valueOf(Random().nextDouble() * 50).setScale(2),
                             Random().nextInt(10)
                     ),
                     UUID.randomUUID().toString()
@@ -97,7 +97,7 @@ class InventoryService @Autowired constructor(
 
     fun reserveItems(itemsIds: Collection<String>): BigDecimal {
         log.debug("reserving items")
-        val totalAmount = BigDecimal.ZERO
+        var totalAmount = BigDecimal.ZERO
         itemsIds.forEach {itemId ->
             val item = itemRepository.findById(itemId).orElseThrow()
             log.debug("sending reserve item for $item")
@@ -105,7 +105,7 @@ class InventoryService @Autowired constructor(
                 throw IllegalStateException("not enough items available: $item")
                 // TODO handle this case by aborting order (and correctly revert already sent inventory reservations
             }
-            totalAmount.add(item.price)
+            totalAmount = totalAmount.add(item.price)
             // TODO store itemid reference temporarily for orderid until being shipped (not contains in further messages)
             kafkaService.sendEvent(
                     TOPIC_INVENTORY,
