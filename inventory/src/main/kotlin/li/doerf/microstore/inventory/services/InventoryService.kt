@@ -2,11 +2,11 @@ package li.doerf.microstore.inventory.services
 
 import com.github.javafaker.Faker
 import li.doerf.microstore.TOPIC_INVENTORY
-import li.doerf.microstore.dto.kafka.InventoryItemAdd
-import li.doerf.microstore.dto.kafka.InventoryItemIncreaseQuantity
-import li.doerf.microstore.dto.kafka.InventoryItemReserve
+import li.doerf.microstore.TOPIC_ORDERS
+import li.doerf.microstore.dto.kafka.*
 import li.doerf.microstore.inventory.entities.Item
 import li.doerf.microstore.inventory.repositories.ItemRepository
+import li.doerf.microstore.inventory.repositories.OrderRepository
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,8 @@ import java.util.*
 @Service
 class InventoryService @Autowired constructor(
         private val kafkaService: KafkaService,
-        private val itemRepository: ItemRepository
+        private val itemRepository: ItemRepository,
+        private val orderRepository: OrderRepository
 ) {
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
@@ -106,7 +107,6 @@ class InventoryService @Autowired constructor(
                 // TODO handle this case by aborting order (and correctly revert already sent inventory reservations
             }
             totalAmount = totalAmount.add(item.price)
-            // TODO store itemid reference temporarily for orderid until being shipped (not contains in further messages)
             kafkaService.sendEvent(
                     TOPIC_INVENTORY,
                     item.id,
@@ -132,5 +132,39 @@ class InventoryService @Autowired constructor(
         item.quantityReserved = item.quantityReserved + event.quantity
         itemRepository.save(item)
         log.info("reserved item: $item")
+    }
+
+    fun prepareItemsShipping(orderId: String) {
+        log.debug("preparing items to ship")
+        val order = orderRepository.findById(orderId).orElseThrow() // TODO handle this case
+        kafkaService.sendEvent(
+                TOPIC_INVENTORY,
+                UUID.randomUUID().toString(),
+                InventoryItemsShip(
+                        orderId,
+                        order.itemIds
+                ),
+                UUID.randomUUID().toString()
+        )
+        kafkaService.sendEvent(
+                TOPIC_ORDERS,
+                UUID.randomUUID().toString(),
+                OrderItemsShipped(
+                        orderId
+                ),
+                UUID.randomUUID().toString()
+        )
+        log.info("shipping instructions dispatched")
+    }
+
+    fun shipItems(event: InventoryItemsShip) {
+        log.debug("shipping items")
+        event.itemIds.forEach { itemId ->
+            val item = itemRepository.findById(itemId).orElseThrow()
+            item.quantity = item.quantity - 1
+            item.quantityReserved = item.quantityReserved - 1
+            itemRepository.save(item)
+            log.info("Order ${event.id} - shipped ${item.name}")
+        }
     }
 }
