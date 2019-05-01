@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class CreditLimitService @Autowired constructor(
         val customerRepository: CustomerRepository,
-        private val orderRepository: OrderRepository
+        val orderRepository: OrderRepository
 ){
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")

@@ -59,7 +59,6 @@ class OrdersListener @Autowired constructor(
                         correlationId
                 )
             }
-            // TODO deduct amount from customer limit (OrderPaymentSuccessful)
         }
     }
 

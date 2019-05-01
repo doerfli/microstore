@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class OrderService @Autowired constructor(
-        private val orderRepository: OrderRepository
+        val orderRepository: OrderRepository
 ){
     companion object {
 

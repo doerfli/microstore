@@ -16,9 +16,9 @@ import java.util.*
 
 @Service
 class InventoryService @Autowired constructor(
-        private val kafkaService: KafkaService,
-        private val itemRepository: ItemRepository,
-        private val orderRepository: OrderRepository
+        val kafkaService: KafkaService,
+        val orderRepository: OrderRepository,
+        val itemRepository: ItemRepository
 ) {
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
@@ -165,6 +165,7 @@ class InventoryService @Autowired constructor(
             item.quantityReserved = item.quantityReserved - 1
             itemRepository.save(item)
             log.info("Order ${event.id} - shipped ${item.name}")
+            log.info("quantity remaining for ${item.name} - ${item.quantity} (${item.quantityReserved} reserved")
         }
     }
 }
