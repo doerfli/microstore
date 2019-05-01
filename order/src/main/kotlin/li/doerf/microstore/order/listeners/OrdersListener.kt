@@ -1,10 +1,9 @@
 package li.doerf.microstore.order.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
-import li.doerf.microstore.dto.kafka.OrderCreate
-import li.doerf.microstore.dto.kafka.OrderCustomerExists
-import li.doerf.microstore.dto.kafka.OrderOpened
+import li.doerf.microstore.dto.kafka.*
 import li.doerf.microstore.listeners.ReplayingRecordsListener
+import li.doerf.microstore.order.entities.OrderStatus
 import li.doerf.microstore.order.services.OrderService
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
@@ -29,6 +28,10 @@ class OrdersListener @Autowired constructor(
         when(event) {
             is OrderOpened -> return orderService.open(event)
             is OrderCustomerExists -> return orderService.updateWithCustomerInfo(event)
+            is OrderItemsReserved -> return orderService.updateState(event.id, OrderStatus.ITEMS_RESERVED)
+            is OrderPaymentSuccessful -> return orderService.updateState(event.id, OrderStatus.PAYMENT_SUCCESSFUL)
+            is OrderItemsShipped -> return orderService.updateState(event.id, OrderStatus.ITEMS_SHIPPED)
+            is OrderFinished -> return orderService.updateState(event.id, OrderStatus.FINISHED)
         }
         return null
     }
@@ -48,7 +51,20 @@ class OrdersListener @Autowired constructor(
                         ),
                         correlationId)
             }
-            // TODO finish order
+            is OrderItemsShipped -> {
+                val order = orderService.getOrder(event.id)
+                kafkaService.sendEvent(
+                        TOPIC_ORDERS,
+                        order.id,
+                        OrderFinished(
+                                order.id,
+                                order.customerId,
+                                OrderEndState.SHIPPED,
+                                null
+                        ),
+                        correlationId
+                )
+            }
         }
     }
 

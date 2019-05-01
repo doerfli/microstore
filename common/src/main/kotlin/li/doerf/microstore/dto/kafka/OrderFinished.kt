@@ -7,5 +7,5 @@ data class OrderFinished(
         val id: String,
         val customerId: String,
         val orderStatus: OrderEndState,
-        val errorText: String
+        val errorText: String?
 )

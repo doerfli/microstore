@@ -1,10 +1,7 @@
 package li.doerf.microstore.inventory.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
-import li.doerf.microstore.dto.kafka.OrderCustomerExists
-import li.doerf.microstore.dto.kafka.OrderItemsReserved
-import li.doerf.microstore.dto.kafka.OrderOpened
-import li.doerf.microstore.dto.kafka.OrderPaymentSuccessful
+import li.doerf.microstore.dto.kafka.*
 import li.doerf.microstore.inventory.services.InventoryService
 import li.doerf.microstore.inventory.services.OrderService
 import li.doerf.microstore.listeners.ReplayingRecordsListener
@@ -49,7 +46,17 @@ class OrdersListener @Autowired constructor(
                         correlationId
                 )
             }
-            is OrderPaymentSuccessful -> inventoryService.prepareItemsShipping(event.id)
+            is OrderPaymentSuccessful -> {
+                inventoryService.prepareItemsShipping(event.id)
+                kafkaService.sendEvent(
+                        TOPIC_ORDERS,
+                        event.id,
+                        OrderItemsShipped(
+                                event.id
+                        ),
+                        correlationId
+                )
+            }
         }
     }
 

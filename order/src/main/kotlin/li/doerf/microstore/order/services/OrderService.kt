@@ -41,4 +41,15 @@ class OrderService @Autowired constructor(
         return order
     }
 
+    fun getOrder(id: String): Order {
+        return orderRepository.findById(id).orElseThrow()
+    }
+
+    fun updateState(id: String, state: OrderStatus) {
+        val order = orderRepository.findById(id).orElseThrow()
+        order.status = state
+        orderRepository.save(order)
+        log.debug("order $id : set state for to $state")
+    }
+
 }

@@ -9,5 +9,5 @@ data class Order(
         val customerId: String,
         var customerOrderId: Long,
         val itemIds: Collection<String>,
-        val status: OrderStatus
+        var status: OrderStatus
 )

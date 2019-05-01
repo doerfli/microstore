@@ -2,8 +2,10 @@ package li.doerf.microstore.inventory.services
 
 import com.github.javafaker.Faker
 import li.doerf.microstore.TOPIC_INVENTORY
-import li.doerf.microstore.TOPIC_ORDERS
-import li.doerf.microstore.dto.kafka.*
+import li.doerf.microstore.dto.kafka.InventoryItemAdd
+import li.doerf.microstore.dto.kafka.InventoryItemIncreaseQuantity
+import li.doerf.microstore.dto.kafka.InventoryItemReserve
+import li.doerf.microstore.dto.kafka.InventoryItemsShip
 import li.doerf.microstore.inventory.entities.Item
 import li.doerf.microstore.inventory.repositories.ItemRepository
 import li.doerf.microstore.inventory.repositories.OrderRepository
@@ -143,14 +145,6 @@ class InventoryService @Autowired constructor(
                 InventoryItemsShip(
                         orderId,
                         order.itemIds
-                ),
-                UUID.randomUUID().toString()
-        )
-        kafkaService.sendEvent(
-                TOPIC_ORDERS,
-                UUID.randomUUID().toString(),
-                OrderItemsShipped(
-                        orderId
                 ),
                 UUID.randomUUID().toString()
         )
