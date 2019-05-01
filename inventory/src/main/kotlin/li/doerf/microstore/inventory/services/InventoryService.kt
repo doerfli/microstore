@@ -103,6 +103,7 @@ class InventoryService @Autowired constructor(
             log.debug("sending reserve item for $item")
             if(item.quantity == 0 || item.quantityReserved + 1 > item.quantity) {
                 throw IllegalStateException("not enough items available: $item")
+                // TODO handle this case by aborting order (and correctly revert already sent inventory reservations
             }
             totalAmount.add(item.price)
             // TODO store itemid reference temporarily for orderid until being shipped (not contains in further messages)
