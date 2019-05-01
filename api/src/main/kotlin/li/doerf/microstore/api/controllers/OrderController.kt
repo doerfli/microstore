@@ -5,7 +5,6 @@ import li.doerf.microstore.api.listeners.OrdersListener
 import li.doerf.microstore.api.rest.dto.CreateOrderRequest
 import li.doerf.microstore.api.rest.dto.CreateOrderResponse
 import li.doerf.microstore.dto.kafka.OrderCreate
-import li.doerf.microstore.dto.kafka.OrderEndState
 import li.doerf.microstore.dto.kafka.OrderFinished
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -60,11 +58,11 @@ class OrderController @Autowired constructor(
 
     private fun processResponse(event: OrderFinished): CreateOrderResponse {
         return CreateOrderResponse(
-                event.id, // TODO
-                0, // TODO
-                BigDecimal.ZERO, // TODO
-                OrderEndState.SHIPPING_FAILED, // TODO
-                "something happened" // TODO
+                event.id,
+                event.orderNumber,
+                event.totalAmount,
+                event.orderStatus,
+                ""
         )
     }
 

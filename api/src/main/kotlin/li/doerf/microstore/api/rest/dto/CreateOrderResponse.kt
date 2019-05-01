@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 data class CreateOrderResponse(
         val orderId: String,
-        val orderNumber: Int,
+        val orderNumber: Long,
         val amount: BigDecimal,
         val orderStatus: OrderEndState,
         val errorText: String
