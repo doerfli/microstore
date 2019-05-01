@@ -1,7 +1,12 @@
 package li.doerf.microstore.payment.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
+import li.doerf.microstore.dto.kafka.OrderItemsReserved
+import li.doerf.microstore.dto.kafka.OrderOpened
+import li.doerf.microstore.dto.kafka.OrderPaymentSuccessful
 import li.doerf.microstore.listeners.ReplayingRecordsListener
+import li.doerf.microstore.payment.services.CreditLimitService
+import li.doerf.microstore.payment.services.OrderService
 import li.doerf.microstore.services.KafkaService
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +16,9 @@ import org.springframework.stereotype.Component
 @KafkaListener(topics = [TOPIC_ORDERS])
 @Component
 class OrdersListener @Autowired constructor(
-        val kafkaService: KafkaService
+        private val kafkaService: KafkaService,
+        private val orderService: OrderService,
+        private val creditLimitService: CreditLimitService
 ) : ReplayingRecordsListener() {
 
     companion object {
@@ -21,7 +28,8 @@ class OrdersListener @Autowired constructor(
 
     override fun applyEventToStore(event: Any?, correlationId: String): Any? {
         when(event) {
-//            is OrderOpened -> return orderService.open(event)
+            is OrderOpened -> return orderService.open(event)
+            is OrderItemsReserved -> return creditLimitService.payOrder(event)
         }
         return null
     }
@@ -41,6 +49,16 @@ class OrdersListener @Autowired constructor(
 //                        ),
 //                        correlationId)
 //            }
+            is OrderItemsReserved -> {
+                kafkaService.sendEvent(
+                        TOPIC_ORDERS,
+                        event.id,
+                        OrderPaymentSuccessful(
+                                event.id
+                        ),
+                        correlationId
+                )
+            }
             // TODO deduct amount from customer limit (OrderPaymentSuccessful)
         }
     }
