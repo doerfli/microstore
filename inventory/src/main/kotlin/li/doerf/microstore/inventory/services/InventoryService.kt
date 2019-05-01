@@ -4,6 +4,7 @@ import com.github.javafaker.Faker
 import li.doerf.microstore.TOPIC_INVENTORY
 import li.doerf.microstore.dto.kafka.InventoryItemAdd
 import li.doerf.microstore.dto.kafka.InventoryItemIncreaseQuantity
+import li.doerf.microstore.dto.kafka.InventoryItemReserve
 import li.doerf.microstore.inventory.entities.Item
 import li.doerf.microstore.inventory.repositories.ItemRepository
 import li.doerf.microstore.services.KafkaService
@@ -92,5 +93,43 @@ class InventoryService @Autowired constructor(
         itemRepository.save(item)
         log.debug("updated item $item")
         return item
+    }
+
+    fun reserveItems(itemsIds: Collection<String>): BigDecimal {
+        log.debug("reserving items")
+        val totalAmount = BigDecimal.ZERO
+        itemsIds.forEach {itemId ->
+            val item = itemRepository.findById(itemId).orElseThrow()
+            log.debug("sending reserve item for $item")
+            if(item.quantity == 0 || item.quantityReserved + 1 > item.quantity) {
+                throw IllegalStateException("not enough items available: $item")
+            }
+            totalAmount.add(item.price)
+            // TODO store itemid reference temporarily for orderid until being shipped (not contains in further messages)
+            kafkaService.sendEvent(
+                    TOPIC_INVENTORY,
+                    item.id,
+                    InventoryItemReserve(
+                            item.id,
+                            1
+                    ),
+                    UUID.randomUUID().toString()
+            )
+            // TODO wait for item reserved confirmation
+        }
+
+        log.info("total amount to pay: $totalAmount")
+        return totalAmount
+    }
+
+    fun reserveItem(event: InventoryItemReserve) {
+        val item = itemRepository.findById(event.id).orElseThrow()
+        log.debug("reserving item $item")
+        if(item.quantity == 0 || item.quantityReserved + event.quantity > item.quantity) {
+            throw IllegalStateException("not enough items available: $item")
+        }
+        item.quantityReserved = item.quantityReserved + event.quantity
+        itemRepository.save(item)
+        log.info("reserved item: $item")
     }
 }

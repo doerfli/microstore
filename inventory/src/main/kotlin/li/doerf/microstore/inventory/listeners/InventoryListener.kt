@@ -3,6 +3,7 @@ package li.doerf.microstore.inventory.listeners
 import li.doerf.microstore.TOPIC_INVENTORY
 import li.doerf.microstore.dto.kafka.InventoryItemAdd
 import li.doerf.microstore.dto.kafka.InventoryItemIncreaseQuantity
+import li.doerf.microstore.dto.kafka.InventoryItemReserve
 import li.doerf.microstore.dto.kafka.InventoryOrderItems
 import li.doerf.microstore.inventory.services.InventoryService
 import li.doerf.microstore.listeners.ReplayingRecordsListener
@@ -26,6 +27,7 @@ class InventoryListener @Autowired constructor(
         when(event) {
             is InventoryItemAdd -> inventoryService.addItem(event)
             is InventoryItemIncreaseQuantity -> inventoryService.increaseQuantity(event)
+            is InventoryItemReserve -> inventoryService.reserveItem(event)
         }
         return null
     }
