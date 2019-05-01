@@ -13,6 +13,7 @@ import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import java.math.BigDecimal
 
 @KafkaListener(topics = [TOPIC_ORDERS])
 @Component
@@ -58,6 +59,8 @@ class OrdersListener @Autowired constructor(
                             OrderFinished(
                                     event.id,
                                     event.customerId,
+                                    BigDecimal.ZERO,
+                                    0,
                                     OrderEndState.CUSTOMER_NOT_FOUND,
                                     "customerId ${event.customerId} does not exist}"
                             ),
