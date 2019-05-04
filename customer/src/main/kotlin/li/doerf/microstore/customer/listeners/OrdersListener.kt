@@ -48,8 +48,7 @@ class OrdersListener @Autowired constructor(
                         OrderCustomerExists(
                                 event.id,
                                 event.customerId,
-                                orderId,
-                                event.itemsIds
+                                orderId
                         ),
                         correlationId)
                 } else {

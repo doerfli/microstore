@@ -35,7 +35,7 @@ class OrdersListener @Autowired constructor(
         log.debug("handleBusinessLogic")
         when(event) {
             is OrderCustomerExists -> {
-                val totalAmount = inventoryService.reserveItems(event.itemsIds)
+                val totalAmount = inventoryService.reserveItems(event.id)
                 kafkaService.sendEvent(
                         TOPIC_ORDERS,
                         event.id,
