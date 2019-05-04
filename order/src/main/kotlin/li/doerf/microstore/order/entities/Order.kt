@@ -1,5 +1,6 @@
 package li.doerf.microstore.order.entities
 
+import li.doerf.microstore.dto.kafka.OrderEndState
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
 import java.math.BigDecimal
@@ -11,5 +12,7 @@ data class Order(
         var customerOrderId: Long,
         var totalAmount: BigDecimal,
         val itemIds: Collection<String>,
-        var status: OrderStatus
+        var status: OrderStatus,
+        var endState: OrderEndState?,
+        var errorText: String?
 )

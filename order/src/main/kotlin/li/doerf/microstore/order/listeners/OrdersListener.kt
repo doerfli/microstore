@@ -31,7 +31,7 @@ class OrdersListener @Autowired constructor(
             is OrderItemsReserved -> return orderService.updateStateAndAmount(event.id, OrderStatus.ITEMS_RESERVED, event.totalAmount)
             is OrderPaymentSuccessful -> return orderService.updateState(event.id, OrderStatus.PAYMENT_SUCCESSFUL)
             is OrderItemsShipped -> return orderService.updateState(event.id, OrderStatus.ITEMS_SHIPPED)
-            is OrderFinished -> return orderService.updateState(event.id, OrderStatus.FINISHED)
+            is OrderFinished -> return orderService.updateStateFinished(event.id, event.orderStatus, event.errorText)
         }
         return null
     }
