@@ -14,6 +14,7 @@ import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 
 @Service
@@ -48,7 +49,7 @@ class InventoryService @Autowired constructor(
                     InventoryItemAdd(
                             id,
                             it,
-                            BigDecimal.valueOf(Random().nextDouble() * 50).setScale(2),
+                            BigDecimal.valueOf(Random().nextDouble() * 50).setScale(2, RoundingMode.HALF_DOWN),
                             Random().nextInt(10)
                     ),
                     UUID.randomUUID().toString()
@@ -98,8 +99,10 @@ class InventoryService @Autowired constructor(
         return item
     }
 
-    fun reserveItems(itemsIds: Collection<String>): BigDecimal {
+    fun reserveItems(orderId: String): BigDecimal {
         log.debug("reserving items")
+        val order = orderRepository.findById(orderId).orElseThrow()
+        val itemsIds = order.itemIds
         var totalAmount = BigDecimal.ZERO
         itemsIds.forEach {itemId ->
             val item = itemRepository.findById(itemId).orElseThrow()
