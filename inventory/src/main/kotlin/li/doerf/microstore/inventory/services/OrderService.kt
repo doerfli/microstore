@@ -26,4 +26,13 @@ class OrderService @Autowired constructor(
         log.debug("saved order $order")
     }
 
+    fun delete(id: String) {
+        val order = orderRepository.findById(id)
+        // TODO revert reservation when order was reserved but not shipped
+        order.ifPresent{
+            orderRepository.delete(order.get())
+        }
+        log.debug("removed order")
+    }
+
 }

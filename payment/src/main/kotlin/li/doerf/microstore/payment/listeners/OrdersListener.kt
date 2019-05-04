@@ -1,6 +1,7 @@
 package li.doerf.microstore.payment.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
+import li.doerf.microstore.dto.kafka.OrderFinished
 import li.doerf.microstore.dto.kafka.OrderItemsReserved
 import li.doerf.microstore.dto.kafka.OrderOpened
 import li.doerf.microstore.dto.kafka.OrderPaymentSuccessful
@@ -30,6 +31,7 @@ class OrdersListener @Autowired constructor(
         when(event) {
             is OrderOpened -> return orderService.open(event)
             is OrderItemsReserved -> return creditLimitService.payOrder(event)
+            is OrderFinished -> return orderService.delete(event.id)
         }
         return null
     }

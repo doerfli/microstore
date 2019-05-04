@@ -27,6 +27,7 @@ class OrdersListener @Autowired constructor(
     override fun applyEventToStore(event: Any?, correlationId: String): Any? {
         when(event) {
             is OrderOpened -> return orderService.open(event)
+            is OrderFinished -> return orderService.delete(event.id)
         }
         return null
     }

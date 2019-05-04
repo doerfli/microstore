@@ -28,4 +28,13 @@ class OrderService @Autowired constructor(
         log.debug("order stored: $order")
     }
 
+    fun delete(id: String) {
+        val order = orderRepository.findById(id)
+        // TODO revert payment if order payed but not shipped
+        order.ifPresent{
+            orderRepository.delete(order.get())
+        }
+        log.debug("removed order")
+    }
+
 }
