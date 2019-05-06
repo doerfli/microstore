@@ -28,14 +28,16 @@ class CreditLimitService @Autowired constructor(
         customerRepository.save(customer.get())
     }
 
-    fun payOrder(event: OrderItemsReserved) {
+    fun payOrder(event: OrderItemsReserved): Boolean {
         val customerId = orderRepository.findById(event.id).orElseThrow().customerId // TODO handle throw
         val customer = customerRepository.findById(customerId).orElseThrow() // TODO handle throw
         if (event.totalAmount > customer.creditLimit) {
-            throw IllegalArgumentException("not enough credit available: $customer") // TODO handle throw and revert order
+            log.warn("not enough credit available: $customer")
+            return false
         }
         customer.creditLimit = customer.creditLimit.subtract(event.totalAmount)
         customerRepository.save(customer)
         log.info("reduced customer credit limit by ${event.totalAmount} to ${customer.creditLimit}")
+        return true
     }
 }

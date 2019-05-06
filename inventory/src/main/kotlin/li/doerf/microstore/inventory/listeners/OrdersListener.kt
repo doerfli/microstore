@@ -2,6 +2,7 @@ package li.doerf.microstore.inventory.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
 import li.doerf.microstore.dto.kafka.*
+import li.doerf.microstore.inventory.entities.Order
 import li.doerf.microstore.inventory.services.InventoryService
 import li.doerf.microstore.inventory.services.OrderService
 import li.doerf.microstore.listeners.ReplayingRecordsListener
@@ -10,6 +11,7 @@ import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import java.util.*
 
 @KafkaListener(topics = [TOPIC_ORDERS])
 @Component
@@ -57,6 +59,11 @@ class OrdersListener @Autowired constructor(
                         ),
                         correlationId
                 )
+            }
+            is OrderFinished -> {
+                if ((eventResponse as Optional<Order>).isPresent && ( event.orderStatus == OrderEndState.PAYMENT_FAILED || event.orderStatus == OrderEndState.SHIPPING_FAILED) ) {
+                    inventoryService.reserveItemsRevert((eventResponse as Optional<Order>).get().itemIds)
+                }
             }
         }
     }

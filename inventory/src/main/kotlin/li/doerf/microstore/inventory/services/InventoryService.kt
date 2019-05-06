@@ -2,10 +2,7 @@ package li.doerf.microstore.inventory.services
 
 import com.github.javafaker.Faker
 import li.doerf.microstore.TOPIC_INVENTORY
-import li.doerf.microstore.dto.kafka.InventoryItemAdd
-import li.doerf.microstore.dto.kafka.InventoryItemIncreaseQuantity
-import li.doerf.microstore.dto.kafka.InventoryItemReserve
-import li.doerf.microstore.dto.kafka.InventoryItemsShip
+import li.doerf.microstore.dto.kafka.*
 import li.doerf.microstore.inventory.entities.Item
 import li.doerf.microstore.inventory.repositories.ItemRepository
 import li.doerf.microstore.inventory.repositories.OrderRepository
@@ -100,7 +97,7 @@ class InventoryService @Autowired constructor(
     }
 
     fun reserveItems(orderId: String): BigDecimal {
-        log.debug("reserving items")
+        log.debug("reserving items for order $orderId")
         val order = orderRepository.findById(orderId).orElseThrow()
         val itemsIds = order.itemIds
         var totalAmount = BigDecimal.ZERO
@@ -128,6 +125,23 @@ class InventoryService @Autowired constructor(
         return totalAmount
     }
 
+    fun reserveItemsRevert(itemIds: Collection<String>) {
+        log.debug("reverting reserved items")
+        itemIds.forEach {itemId ->
+            val item = itemRepository.findById(itemId).orElseThrow()
+            log.debug("sending reserve item for $item")
+            kafkaService.sendEvent(
+                    TOPIC_INVENTORY,
+                    item.id,
+                    InventoryItemReserveRevert(
+                            item.id,
+                            1
+                    ),
+                    UUID.randomUUID().toString()
+            )
+        }
+    }
+
     fun reserveItem(event: InventoryItemReserve) {
         val item = itemRepository.findById(event.id).orElseThrow()
         log.debug("reserving item $item")
@@ -137,6 +151,14 @@ class InventoryService @Autowired constructor(
         item.quantityReserved = item.quantityReserved + event.quantity
         itemRepository.save(item)
         log.info("reserved item: $item")
+    }
+
+    fun revertReservedItem(event: InventoryItemReserveRevert) {
+        val item = itemRepository.findById(event.id).orElseThrow()
+        log.debug("reverting reserved item $item")
+        item.quantityReserved = item.quantityReserved - event.quantity
+        itemRepository.save(item)
+        log.info("reverted reservation: $item")
     }
 
     fun prepareItemsShipping(orderId: String) {

@@ -1,10 +1,7 @@
 package li.doerf.microstore.payment.listeners
 
 import li.doerf.microstore.TOPIC_ORDERS
-import li.doerf.microstore.dto.kafka.OrderFinished
-import li.doerf.microstore.dto.kafka.OrderItemsReserved
-import li.doerf.microstore.dto.kafka.OrderOpened
-import li.doerf.microstore.dto.kafka.OrderPaymentSuccessful
+import li.doerf.microstore.dto.kafka.*
 import li.doerf.microstore.listeners.ReplayingRecordsListener
 import li.doerf.microstore.payment.services.CreditLimitService
 import li.doerf.microstore.payment.services.OrderService
@@ -13,6 +10,7 @@ import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import java.math.BigDecimal
 
 @KafkaListener(topics = [TOPIC_ORDERS])
 @Component
@@ -52,14 +50,31 @@ class OrdersListener @Autowired constructor(
 //                        correlationId)
 //            }
             is OrderItemsReserved -> {
-                kafkaService.sendEvent(
-                        TOPIC_ORDERS,
-                        event.id,
-                        OrderPaymentSuccessful(
-                                event.id
-                        ),
-                        correlationId
-                )
+                val paymentSuccessful = eventResponse as Boolean
+                if (paymentSuccessful) {
+                    kafkaService.sendEvent(
+                            TOPIC_ORDERS,
+                            event.id,
+                            OrderPaymentSuccessful(
+                                    event.id
+                            ),
+                            correlationId
+                    )
+                } else {
+                    val order = orderService.get(event.id)
+                    kafkaService.sendEvent(
+                            TOPIC_ORDERS,
+                            event.id,
+                            OrderFinished(
+                                    event.id,
+                                    order.customerId,
+                                    BigDecimal.ZERO,
+                                    0,
+                                    OrderEndState.PAYMENT_FAILED,
+                                    "customer ${order.customerId} payment limit exceeded}"
+                            ),
+                            correlationId)
+                }
             }
         }
     }

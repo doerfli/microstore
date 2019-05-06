@@ -37,4 +37,8 @@ class OrderService @Autowired constructor(
         log.debug("removed order")
     }
 
+    fun get(id: String): Order {
+        return orderRepository.findById(id).orElseThrow()
+    }
+
 }

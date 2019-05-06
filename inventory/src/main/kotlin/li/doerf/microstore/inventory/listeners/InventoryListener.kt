@@ -25,6 +25,7 @@ class InventoryListener @Autowired constructor(
             is InventoryItemAdd -> inventoryService.addItem(event)
             is InventoryItemIncreaseQuantity -> inventoryService.increaseQuantity(event)
             is InventoryItemReserve -> inventoryService.reserveItem(event)
+            is InventoryItemReserveRevert -> inventoryService.revertReservedItem(event)
             is InventoryItemsShip -> inventoryService.shipItems(event)
         }
         return null

@@ -6,6 +6,7 @@ import li.doerf.microstore.inventory.repositories.OrderRepository
 import li.doerf.microstore.utils.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class OrderService @Autowired constructor(
@@ -26,13 +27,14 @@ class OrderService @Autowired constructor(
         log.debug("saved order $order")
     }
 
-    fun delete(id: String) {
+    fun delete(id: String): Optional<Order> {
         val order = orderRepository.findById(id)
         // TODO revert reservation when order was reserved but not shipped
         order.ifPresent{
             orderRepository.delete(order.get())
         }
         log.debug("removed order")
+        return order
     }
 
 }
