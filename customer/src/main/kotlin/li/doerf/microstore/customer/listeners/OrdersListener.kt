@@ -38,37 +38,38 @@ class OrdersListener @Autowired constructor(
     override fun handleBusinessLogic(event: Any, correlationId: String, eventResponse: Any?) {
         log.debug("handleBusinessLogic")
         when(event) {
-            is OrderOpened -> {
-                val customerExists = customerService.hasCustomer(event.customerId)
-                if(customerExists) {
-                    val orderId = orderService.getOrderId(event.customerId)
-                    kafkaService.sendEvent(
-                        TOPIC_ORDERS,
-                        event.id,
-                        OrderCustomerExists(
-                                event.id,
-                                event.customerId,
-                                orderId
-                        ),
-                        correlationId)
-                } else {
-                    kafkaService.sendEvent(
-                            TOPIC_ORDERS,
-                            event.id,
-                            OrderFinished(
-                                    event.id,
-                                    event.customerId,
-                                    BigDecimal.ZERO,
-                                    0,
-                                    OrderEndState.CUSTOMER_NOT_FOUND,
-                                    "customerId ${event.customerId} does not exist}"
-                            ),
-                            correlationId)
-                }
-            }
+            is OrderOpened -> handleOrderOpened(event, correlationId)
         }
     }
 
+    private fun handleOrderOpened(event: OrderOpened, correlationId: String) {
+        val customerExists = customerService.hasCustomer(event.customerId)
+        if (customerExists) {
+            val orderId = orderService.getOrderId(event.customerId)
+            kafkaService.sendEvent(
+                    TOPIC_ORDERS,
+                    event.id,
+                    OrderCustomerExists(
+                            event.id,
+                            event.customerId,
+                            orderId
+                    ),
+                    correlationId)
+        } else {
+            kafkaService.sendEvent(
+                    TOPIC_ORDERS,
+                    event.id,
+                    OrderFinished(
+                            event.id,
+                            event.customerId,
+                            BigDecimal.ZERO,
+                            0,
+                            OrderEndState.CUSTOMER_NOT_FOUND,
+                            "customerId ${event.customerId} does not exist}"
+                    ),
+                    correlationId)
+        }
+    }
 
 
 }
