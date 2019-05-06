@@ -22,7 +22,7 @@ docker-compose up -d zookeeper kafka customer-redis inventory-redis order-redis 
 Local logging with logstash into elasticsearch container (kibana viewer available at http://localhost:5601)
 
 ```
-export CLOUDSTORE_ROOT=<absolute path to git root>
+export MICROSTORE_ROOT=<absolute path to git root>
 logstash -f logstash/logstash.conf
 ```
 
