@@ -129,6 +129,7 @@ class InventoryService @Autowired constructor(
         log.debug("reverting reserved items")
         itemIds.forEach {itemId ->
             val item = itemRepository.findById(itemId).orElseThrow()
+            // TODO only revert items that were really reserved
             log.debug("sending reserve item for $item")
             kafkaService.sendEvent(
                     TOPIC_INVENTORY,
